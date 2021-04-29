@@ -4,5 +4,6 @@ patterns in a square LxL lattice, this code is later modified to also generate t
 * Generate rectangular patterns in an LxH lattice
 * I removed the periodic boundary conditions because it makes no sense in the real world problem i'm dealing with
 * I removed holes that in theory are there but not in real printed patterns, that is , in the generated image they are not occupied but in reality they fall because there is no near material to hold up with.
+
 The code is divided as follows: the file NetGraphics is used to generate the image from the nodes and nightbors data of the graph generated. the file Graph.py generated the graphs and 
 percolating clusters, finally the file percolation.py is the main file where all is put together to use
