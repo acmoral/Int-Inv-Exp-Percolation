@@ -1,1 +1,1 @@
-#color images showing the clusters
+# Color images showing the clusters
