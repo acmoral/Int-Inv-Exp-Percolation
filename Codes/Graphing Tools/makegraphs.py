@@ -166,18 +166,21 @@ ax2.set_ylabel(r'Desplazamiento en Y $[cm] $',fontsize=20)
 ax1.tick_params(axis='both', labelsize=20)
 ax2.tick_params(axis='both', labelsize=20)
 ax1.legend()
-I=5*0.3/12
-so=30
-soc=so*so*so
+#--------------------Calculating Young's Moduli---------------------------------
+I=5*0.3*0.3*0.3/12#The second moment of inertia of the material, respect to theZ axis
+so=30#The initial lenght of the material
+soc=so*so*so#cube it
 E=np.ones(5)*soc/(3*I*data['pendiente']*10)#el 10 es para que las unidades pasen de g/cm s^2 a kg/m s^2
-data['E']=E
+data['E']=E#append it to the calculated E
+#------------------Plotting probability versus E---------------------------
 fig, (ax1)=plt.subplots(1, 1,figsize=(10, 10))
 ax1.plot(index,data['E'],marker='P',ls='dashed',linewidth=0.5)
 ax1.set_xlabel(r'Probability',fontsize=15)
 ax1.set_ylabel(r'$E\quad[N/m^2] $',fontsize=15)
-af=ufloat(5,0.1)
-bf=ufloat(0.3,0.1)
-If=af*bf/12
+#-------------Here i want to also calculate the error propagation--------------------
+af=ufloat(5,0)#The measures were cut to precision with the machine, some of the material is consumed, but its sistematic in all the plates
+bf=ufloat(0.3,0)#this measure is given by the manufacturer, given that they are all cut form the same material, no error is given
+If=af*bf*bf*bf/12
 sof=ufloat(30,0.1)
 sof=sof*sof*sof
 s=data['pendiente']
