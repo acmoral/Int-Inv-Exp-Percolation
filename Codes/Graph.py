@@ -1,4 +1,3 @@
-
 # Import the necessary libraries.
 import NetGraphics
 import imp
@@ -161,9 +160,9 @@ class UndirectedGraph:
       x.sort()
       fig, ax = plt.subplots(figsize=(10, 10))
       if bars==True:
-       if p>0.5:
+       if p>0.55: #I changed this for the circular case because it gets messy at this point
           names=[str(i) for i in x]
-          ax.set_xticklabels(names,rotation=45,fontsize = 15.0)
+          ax.set_xticklabels(names,rotation=45,fontsize = 10.0)
           ax.bar(names,y)
        else:
           ax.hist(h)
@@ -171,10 +170,11 @@ class UndirectedGraph:
       ax.set_ylabel('frecuencia', fontsize = 20.0)
       ax.annotate(' L=%3d \n H= %3d \n O=%3d' %(L,H,sume*L*H),xy=(0.9, 0.9),xycoords='axes fraction',horizontalalignment='right', verticalalignment='top',fontsize=16)
       ax.set_title(r'$p_{deseado}= $'+ str(p)+'  '+r' $p_{real}=$'+" %5.5f" % (sume), fontsize = 20.0)
+      ax.figure.savefig(r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\histograms'+'\\' +str(p)+'.png')
 # -----------------------------------------------------------------------
 #This is used to generate the rectangular percolation
 # ------------------------------------------------------------------------    
-    def PlotRectangular(p, seed, sizex,sizey,scale,bars=True):
+    def PlotCircular(p, seed, sizex,sizey,scale,bars=True):
      scipy.random.seed(seed)
      L=math.floor((sizex-6)/(res))
      H=math.floor((sizey)/(res))
@@ -275,7 +275,7 @@ class UndirectedGraph:
 # ------------------------------------------------------------------------  
     def AddN(self,L,H):
       nodes=self.GetNodes()
-      nbrs = [[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]
+      nbrs = [[0, 1], [1, 0] ,[-1,0],[0,-1]]
       for node in nodes:
                   for nbr in nbrs:
                      if (node[0]+nbr[0])>L or (node[1]+nbr[1])>H or (node[0]+nbr[0])<0 or  (node[1]+nbr[1])<0:
@@ -286,11 +286,12 @@ class UndirectedGraph:
                            self.AddEdge(node, site)
 # -----------------------------------------------------------------------
 #But it is not the same for the inverted clusters, if the holes are connected diagonally(which theya re in real life) then materials cannot be connected diagonally
-#that is, either the inverted cluster has diagonal neighbors
+#that is, either the inverted cluster has diagonal neighbors or the other
+#in the case for circular i said that in the normal non inverted cluster the diagonal dots are not neighbors, because they occupy less space, that means that non dot spaces are connected in dual space
 # ------------------------------------------------------------------------   
     def AddN2(self,L,H):
       nodes=self.GetNodes()
-      nbrs = [[0, 1], [1, 0] ,[-1,0],[0,-1]]
+      nbrs =  [[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]#this was changed from rectangular to circular
       for node in nodes:
                   for nbr in nbrs:
                      if (node[0]+nbr[0])>L or (node[1]+nbr[1])>H or (node[0]+nbr[0])<0 or  (node[1]+nbr[1])<0:

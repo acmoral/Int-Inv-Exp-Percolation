@@ -2,6 +2,8 @@ import scipy
 import os
 import random
 import tempfile
+import shutil
+
 import IPython.display
 try:
     import Image
@@ -176,10 +178,8 @@ def DrawSquareNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale, change
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
     hold=convert(5)
-    # Set up image file
-    if imfile is None:
-        imfile = tempfile.mktemp()  # make unique filename in /tmp
-        imfile += "_square_network_sites.png"
+    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\color'
+    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\Black'
     # Background white (in case some nodes missing)
     white = (255, 255, 255)
     color=(0,0,0)
@@ -196,7 +196,7 @@ def DrawSquareNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale, change
             for node in cluster:
                 x = node[0]* scale+hold
                 y = node[1] * scale
-                draw.rectangle(((x, y), (x + scale, y + scale)), fill=color)
+                draw.ellipse((x, y, x + scale, y + scale), fill=color)#major change, from square to ellipse
         # Pick random color for next cluster
         colorRange = (0, 200)
         if change:
@@ -210,8 +210,13 @@ def DrawSquareNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale, change
     draw.ellipse(liste , fill=(0,0,0,0))
     font = ImageFont.truetype(r'C:\Users\Carolina\AppData\Local\Microsoft\Windows\Fonts\AdobeKaitiStd-Regular.otf', 16)
     draw.text((10, 10),'p= ' +str(p),(0,0,0),font=font)
-    im.save(imfile,dpi=(400,400))
-    Display(imfile)
+    if change: 
+     file=dire1+"\\" + str(p)+'.png'
+     im.save(file,'PNG',dpi=(400,400))
+    else:
+     file2=dire2+"\\" + str(p)+'.png'
+     im.save(file2,'PNG',dpi=(400,400))
+    #Display(imfile)
     return im
 
 # Copyright (C) Cornell University
