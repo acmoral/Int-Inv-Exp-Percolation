@@ -21,10 +21,10 @@ p_inf_err=data['p_inf_dev']
 p_inf_err=p_inf_err[-8:]
 p_real_err=data['preal_dev']
 p_real_err=p_real_err[-8:]
-pc_real=0.58
-pc_ideal=0.91
-pc_real_dev=0.02
-pc_ideal_dev=0.08
+pc_real=0.39
+pc_ideal=0.85
+pc_real_dev=0.03 
+pc_ideal_dev=0.15
 fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))#aca puedes cambiar el tamaño de la figura 12 es el ancho y 8 la altura
 ax1.errorbar(p_ideal_array, p_inf_array, xerr=0, yerr=p_inf_err, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
 ax2.errorbar(p_real_array, p_inf_array, xerr=p_real_err, yerr=p_inf_err, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')

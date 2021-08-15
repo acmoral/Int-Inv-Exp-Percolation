@@ -501,9 +501,12 @@ class UndirectedGraph:
      seeds=np.linspace(1,20,20,dtype=int)
      eps=[]
      dev=[]
+     p_r=[]
+     p_r_dev=[]
      probs=np.linspace(0,1,50)
      for p in probs:
        Y=[]
+       p_real=[]
        for seed in seeds:
          scipy.random.seed(seed)
          g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
@@ -511,20 +514,29 @@ class UndirectedGraph:
          clusters=g.FindAllClusters()
          epsilon=g.eps(clusters)
          Y.append(epsilon)
+         p_real.append(len(g.GetNodes())/(g.L*g.H))
        eps.append(np.mean(Y))
        dev.append(np.std(Y))
-     fig = plt.figure()
-     ax = fig.add_subplot(111) 
-     ax.plot(probs,eps,marker='o',linestyle=' ')
-     ax.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
-     ax.xaxis.set_major_formatter(mtick.FuncFormatter(ticks))  
+       p_r.append(np.mean(p_real))
+       p_r_dev.append(np.std(p_real))
+     fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))
+     ax1.plot(probs,eps,marker='D',linestyle=' ',markersize=6,markerfacecolor="None")
+     ax2.errorbar(p_r,eps,xerr=p_r_dev,yerr=dev,marker='D',linestyle=' ',markersize=6,markerfacecolor="None")
+     ax1.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
+     ax1.xaxis.set_major_formatter(mtick.FuncFormatter(ticks)) 
+     ax2.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
+     ax2.xaxis.set_major_formatter(mtick.FuncFormatter(ticks)) 
+     ax1.set_xlabel('p',fontsize=30)
+     ax2.set_xlabel('$p_{real}$',fontsize=30)
+     ax1.set_ylabel(r'$\xi(p)$',fontsize=30)
+     ax1.tick_params( labelsize=20)
+     ax2.tick_params( labelsize=20)
      #ax.set_xlabel('log(p)')
      #ax.set_ylabel(r'$log(\epsilon(p))$')
-     ax.set_title('Connectedness')
-     fig.savefig(path+r'\videos y fotos medidas\Results\30X30FS\connectedness'+'\\''connected_averaged_over_seeds.png')#change this for each case
-     d={'p':probs,'epsilon':eps,'eps_dev':dev}
+     fig.savefig(path+r'\videos y fotos medidas\Results\30X5FS\connectedness'+'\\''connected_averaged_over_seeds_2.png')#change this for each case
+     d={'p':probs,'epsilon':eps,'eps_dev':dev,'p_real':p_r,'p_real_dev':p_r_dev}
      df=pd.DataFrame.from_dict(d)
-     df.to_csv(path+r'\videos y fotos medidas\Results\30X30FS\connectedness\data.csv',index=0)
+     df.to_csv(path+r'\videos y fotos medidas\Results\30X5FS\connectedness\connect_30X5FS_2.csv',index=0)
      
 #------------------------------------------------------------------------------
 #               P_infinite(p) let's see a good behaviour of this thing
@@ -603,15 +615,19 @@ class UndirectedGraph:
 #------------------------------------------------------------------------------      
     def sVSp(sizex,sizey,scale):
         probs=np.linspace(0,1,50)
-        seeds=np.linspace(1,10,10,dtype=int)
+        seeds=np.linspace(1,20,20,dtype=int)
         totalm=[]
+        p_real=[]
+        p_real_dev=[]
         for p in probs:
          m=[]
+         p_r=[]
          for seed in seeds:
            scipy.random.seed(seed)
            g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
            g.Fill()#added this to the filling case
            clusters=g.FindAllClusters()
+           p_r.append(len(g.GetNodes())/(g.H*g.L))
            s=g.s_sizes(clusters)
            keys = np.fromiter(s.keys(), dtype=float)
            if keys.any():
@@ -619,17 +635,23 @@ class UndirectedGraph:
             m.append(mean)
            else:
             m.append(0)
+         p_real.append(np.mean(p_r))
+         p_real_dev.append(np.std(p_r))
          totalm.append(np.mean(m))
         dev=np.std(totalm)
-        plt.plot(probs,totalm,ls='dashed',marker='o')
-        plt.xlabel('p')
-        plt.ylabel(r'<S>')
-        plt.title(r'cluster size distribution <S> vs p, points= '+str(len(probs)))
-        plt.savefig(path+r'\videos y fotos medidas\Results\30X5FS\averageSVsP'+'\\' 'points= ' +str(len(probs))+'.png')#change this for each case
-        plt.close()
-        d={'probs':probs,'<s>':totalm,'dev':dev}
+        fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))
+        ax1.errorbar(probs,totalm,xerr=0,yerr=dev, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
+        ax2.errorbar(p_real,totalm,xerr=p_real_dev,yerr=dev, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
+        ax1.set_xlabel('p',fontsize=30)
+        ax1.set_ylabel(r'<S>',fontsize=30)
+        ax1.tick_params( labelsize=20)
+        ax2.tick_params( labelsize=20)
+        ax2.set_xlabel(r'$p_{real}$',fontsize=30)
+        ax1.set_title(r'cluster size distribution <S> vs p, points= '+str(len(probs)))
+        d={'probs':probs,'<s>':totalm,'dev':dev,'p_real':p_real,'p_real_dev':p_real_dev}
         df=pd.DataFrame.from_dict(d)
-        df.to_csv(path+r'\videos y fotos medidas\Results\30x5FS\averageSVsP\data_50ptos.csv', index = False)
+        df.to_csv(path+r'\videos y fotos medidas\Results\30x5FC\averageSVsP\30X5FC_SvsP.csv', index = False)
+        fig.savefig(path+r'\videos y fotos medidas\Results\30X5FC\averageSVsP'+'\\' '30X5FC_points= ' +str(len(probs))+'.png')#change this for each case
         
 #------------------------------------------------------------------------------
 #     sns vs p   

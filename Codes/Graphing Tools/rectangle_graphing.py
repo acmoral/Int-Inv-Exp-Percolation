@@ -24,7 +24,7 @@ class showcase:
        a=df['y']
        weight=df['m']
        weight=np.array(weight)/1000
-       weight=weight*10
+       weight=weight*9.8
        height=-a
        self.weights=weight
        self.heights=height
@@ -81,7 +81,7 @@ class showcase:
          self.R=linear_regressor.score(X,Y)
      def plot_youngs(data,probs):
        fig, (ax1)=plt.subplots(1, 1,figsize=(16, 8))
-       ax1.errorbar(probs,data['E'],xerr=data['p_err'],yerr=data['Eerror'],marker='.',ls='',ms=9,markerfacecolor="None", markeredgewidth=2)
+       ax1.errorbar(probs,data['E'],xerr=data['p_err'],yerr=data['Eerror'],marker='D',ls='',ms=7,markerfacecolor="None", markeredgewidth=2,color='black')
        ax1.set_xlabel(r'Probabilidad',fontsize=30)
        ax1.set_ylabel(r'Modulo de Young $[kg/s^2 m]$',fontsize=30) 
        ax1.tick_params(axis='both', labelsize=20)
