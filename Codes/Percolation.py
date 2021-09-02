@@ -7,6 +7,7 @@ Created on Mon Mar 29 10:16:10 2021
 """
 import pandas as pd 
 from Graph import *
+import aux_theory_functions
 import NetGraphics
 import matplotlib.pyplot as plt
 import numpy as np
