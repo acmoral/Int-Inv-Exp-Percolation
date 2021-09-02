@@ -53,7 +53,7 @@ class UndirectedGraph:
     def setHalfCounter(self, counter): 
         self.halfcounter=counter
     def setLH(self, sizex,sizey,scale): 
-        L=math.floor((sizex-6)/(res))
+        L=math.floor((sizex-10)/(res))
         H=math.floor((sizey)/(res))
         L=int(L/scale)#in pixel
         H=int(H/scale)# in pixel
@@ -70,7 +70,7 @@ class UndirectedGraph:
             self.circle[node] = False   
             if node[1]==0:
              self.borderup[node]=False
-            elif node[1]==self.H:
+            elif node[1]==self.H-1:
              self.borderdown[node] = False
 # -----------------------------------------------------------------------------
 #Adding edge to graph
@@ -236,8 +236,8 @@ class UndirectedGraph:
      borderdown=g.borderdown
      L=g.L
      H=g.H
-     NetGraphics.DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p,nodelists=cl,imsizex=sizex,imsizey=sizey,scale=scale,change=False)
-     NetGraphics.DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p,nodelists=cl,imsizex=sizex,imsizey=sizey,scale=scale,change=True)
+     NetGraphics.DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p,nodelists=cl,imsizex=sizex,imsizey=sizey,scale=scale,seed=seed,change=False)
+     NetGraphics.DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p,nodelists=cl,imsizex=sizex,imsizey=sizey,scale=scale,seed=seed,change=True)
      g.drawhist(False,p,bars,sizex,sizey)
 # -----------------------------------------------------------------------
 #This plots the actual pattern generated in the material
@@ -249,8 +249,8 @@ class UndirectedGraph:
      H=g.H
      g.Fill()#fill it
      cl = g.FindAllClusters()
-     NetGraphics.DrawSquareNetworkSites(L,H,p,nodelists=cl,imsizex=sizex,imsizey=sizey,scale=scale,change=False)
-     NetGraphics.DrawSquareNetworkSites(L,H,p,nodelists=cl,imsizex=sizex,imsizey=sizey,scale=scale,change=True)
+     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
+     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
      g.drawhist(True,p,bars,sizex,sizey)
 # -----------------------------------------------------------------------
 #This returns the actual printed probability, it could be used to compare with the one that is required
@@ -329,7 +329,7 @@ class UndirectedGraph:
       L=self.L
       H=self.H
       nodes=self.GetNodes()
-      nbrs =[[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]] 
+      nbrs =[[0, 1], [1, 0] ,[-1,0],[0,-1]]
       for node in nodes:
                   for nbr in nbrs:
                      if (node[0]+nbr[0])>L or (node[1]+nbr[1])>H or (node[0]+nbr[0])<0 or  (node[1]+nbr[1])<0:
@@ -347,7 +347,7 @@ class UndirectedGraph:
       L=self.L
       H=self.H
       nodes=self.GetNodes()
-      nbrs = [[0, 1], [1, 0] ,[-1,0],[0,-1]]  #this was changed from rectangular to circular
+      nbrs =  [[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]  #this was changed from rectangular to circular
       for node in nodes:
                   for nbr in nbrs:
                      if (node[0]+nbr[0])>L or (node[1]+nbr[1])>H or (node[0]+nbr[0])<0 or  (node[1]+nbr[1])<0:
@@ -719,15 +719,12 @@ class UndirectedGraph:
         nodes=self.GetNodes()
         counter=0
         for node in nodes:
-            c=0
             nbrs=self.GetNeighbors(node)
-            four=[(node[0]+1,node[1]),(node[0],node[1]+1),(node[0]+1,node[1]+1)]
-            for el in four:
-                if el in nbrs:
-                    c+=1
-            if c==3:
-             self.circle[node]= True  
-             counter+=1
+            if (node[0],node[1]+1) in nbrs:
+                if (node[0]+1,node[1]) in nbrs:
+                    if (node[0]+1,node[1]+1) in nodes:
+                        self.circle[node]= True  
+                        counter+=1
         self.setCounter(counter)
 # -----------------------------------------------------------------------
 #Also in the border

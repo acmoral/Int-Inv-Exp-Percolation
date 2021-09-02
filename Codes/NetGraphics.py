@@ -4,6 +4,7 @@ import random
 import tempfile
 import shutil
 import math
+import cairo
 import IPython.display
 try:
     import Image
@@ -174,7 +175,7 @@ def DrawSquareNetworkBonds(graph, nodelists=None,
 def convert(a):
     return int(a/ 0.00635)#Resolution,convert cm to pixel from 400 dpi
 
-def DrawHexagonNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale, change=True, imfile=None):
+def DrawHexagonNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale,seed, change=True, imfile=None):
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
     side=6
@@ -213,115 +214,98 @@ def DrawHexagonNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale, chang
     font = ImageFont.truetype(r'C:\Users\Carolina\AppData\Local\Microsoft\Windows\Fonts\AdobeKaitiStd-Regular.otf', 16)
     draw.text((10, 10),'p= ' +str(p),(0,0,0),font=font)
     if change: 
-     file=dire1+"\\" + str(p)+'.png'
+     file=dire1+"\\" + str(p)+str(seed)+'.png'
      im.save(file,'PNG',dpi=(400,400))
     else:
-     file2=dire2+"\\" + str(p)+'.png'
+     file2=dire2+"\\" + str(p)+str(seed)+'.png'
      im.save(file2,'PNG',dpi=(400,400))
     #Display(file)
     return im
-def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,nodelists, scale, change=True, imfile=None):
+def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,nodelists, scale,seed, change=True, imfile=None):
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
-    side=6
-    hold=convert(5)
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\color'
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\black'
+    hold=convert(9)
+    rad=scale/2
+    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\color\longer'
+    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\black\longer'
     # Background white (in case some nodes missing)
     white = (255, 255, 255)
-    color=(0,0,0)
-    im = Image.new('RGB', (pixelx, pixely), white)
-    if (scale > 1):
-        draw = ImageDraw.Draw(im)
-    # Draw clusters
-    for cluster in nodelists:
-        if (scale == 1):
-            for node in cluster:
-                x=node[0]+hold
-                im.putpixel((x,node[1]), color)
-        else:
+    color=[0,0,0]
+    if change: 
+     file=dire1+"\\" + str(p)+str(seed)+'.svg'
+    else:
+     file=dire2+"\\" + str(p)+str(seed)+'.svg'
+    with cairo.SVGSurface(file, pixelx, pixely) as surface:
+     context = cairo.Context(surface)
+     # Draw clusters
+     for cluster in nodelists:
+            context.set_source_rgb(*color)
             for node in cluster:
                 x = node[0]* scale+hold
                 y = node[1] * scale
-                draw.ellipse((x, y, x + scale, y + scale), fill=color)
+                context.arc(x+rad, y+rad, rad, 0, 2*math.pi)
+                context.fill()
                 if squares[node]:
-                    draw.rectangle(((x+scale/2, y+scale/2), (x + 3*scale/2, y + 3*scale/2)), fill=color)
+                    context.rectangle(x+rad, y+rad, scale,scale)
+                    context.fill()
                 if node[1]==0:
                  if borderup[node]:
-                    draw.rectangle(((x+scale/2, y), (x + 3*scale/2, y + scale/2)), fill=color)
+                    context.rectangle(x+scale/2, y ,scale, rad)
+                    context.fill()
                 if node[1]==49:   
                  if borderdown[node]:
-                    draw.rectangle(((x+scale/2, y+scale/2), (x + 3*scale/2, y+scale )), fill=color)
-                
-                       
-        # Pick random color for next cluster
-        colorRange = (0, 200)
-        if change:
-         color = (random.randint(*colorRange),
+                    context.rectangle(x+scale/2, y+scale/2, scale, rad)
+                    context.fill()
+                            
+               # Pick random color for next cluster
+            colorRange = (0, 200)
+            if change:
+                color = [random.randint(*colorRange),
                  random.randint(*colorRange),
-                 random.randint(*colorRange))
-    x=convert(imsizex-0.5)
-    dist=0.27
-    r=convert(0.125)
-    for i in range (9):
-     y=convert(dist*3/2+dist*2*i)
-     liste=(x-r, y-r, x+r, y+r)
-     draw.ellipse(liste , fill=(0,0,0,0))
-    font = ImageFont.truetype(r'C:\Users\Carolina\AppData\Local\Microsoft\Windows\Fonts\AdobeKaitiStd-Regular.otf', 50)
-    draw.text((10, 10),'p= ' +str(p),(0,0,0),font=font)
-    if change: 
-     file=dire1+"\\" + str(p)+'.png'
-     im.save(file,'PNG',dpi=(400,400))
-    else:
-     file2=dire2+"\\" + str(p)+'.png'
-     im.save(file2,'PNG',dpi=(400,400))
-    #Display(file)
-    return im
-def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, change=True, imfile=None):
+                 random.randint(*colorRange)]
+            x=scale*305+hold
+            dist=0.26
+            r=convert(0.125)
+            for i in range (9):
+             y=convert(dist*3/2+dist*2*i)
+             context.arc(x, y, r,0, 2*math.pi)
+             context.fill()
+           
+def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change=True):
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
-    hold=convert(5)
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio'
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio'
+    hold=convert(9)
+    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\color\longer'
+    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\black\longer'
     # Background white (in case some nodes missing)
-    # Background white (in case some nodes missing)
-    white = (255, 255, 255)
-    color=(0,0,0)
-    im = Image.new('RGB', (pixelx, pixely), white)
-    if (scale > 1):
-        draw = ImageDraw.Draw(im)
-    # Draw clusters
-    for cluster in nodelists:
-        if (scale == 1):
-            for node in cluster:
-                x=node[0]+hold
-                im.putpixel((x,node[1]), color)
-        else:
-            for node in cluster:
-                x = node[0]* scale+hold
-                y = node[1] * scale
-                draw.rectangle(((x, y), (x + scale, y + scale)), fill=color)
-        # Pick random color for next cluster
-        colorRange = (0, 200)
-        if change:
-         color = (random.randint(*colorRange),
-                 random.randint(*colorRange),
-                 random.randint(*colorRange))
-    x=convert(imsizex-0.5)
-    y=convert(imsizey/2)
-    r=convert(0.2)
-    liste=(x-r, y-r, x+r, y+r)
-    draw.ellipse(liste , fill=(0,0,0,0))
-    font = ImageFont.truetype(r'C:\Users\Carolina\AppData\Local\Microsoft\Windows\Fonts\AdobeKaitiStd-Regular.otf', 16)
-    draw.text((10, 10),'p= ' +str(p),(0,0,0),font=font)
+    color=[0,0,0]
     if change: 
-     file=dire1+"\\" + str(p)+'.png'
-     im.save(file,'PNG',dpi=(400,400))
+     file=dire1+"\\" + str(p)+str(seed)+'.svg'
     else:
-     file2=dire2+"\\" + str(p)+'.png'
-     im.save(file2,'PNG',dpi=(400,400))
-    #Display(file)
-    return im
+     file=dire2+"\\" + str(p)+str(seed)+'.svg'
+    with cairo.SVGSurface(file, pixelx, pixely) as surface:
+     context = cairo.Context(surface)
+     for cluster in nodelists:
+         context.set_source_rgb(*color)
+         for node in cluster:
+            x = node[0]* scale+hold
+            y = node[1] * scale
+            context.rectangle(x, y,  scale, scale)
+            context.fill()
+         # Pick random color for next cluster
+         colorRange = (0, 200)
+         if change:
+          color = (random.randint(*colorRange),
+                  random.randint(*colorRange),
+                  random.randint(*colorRange))
+     x=scale*305+hold
+     dist=0.26
+     r=convert(0.125)
+     for i in range (9):
+      y=convert(dist*3/2+dist*2*i)
+      context.arc(x, y, r,0, 2*math.pi)
+      context.fill()
+
 # Copyright (C) Cornell University
 # All rights reserved.
 # Apache License, Version 2.0

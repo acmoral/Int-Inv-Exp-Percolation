@@ -10,50 +10,13 @@ from Graph import *
 import NetGraphics
 import matplotlib.pyplot as plt
 import numpy as np
-sizex=36
+sizex=40
 sizey=5
 scale=15.74
+p=0.15
 path=r"C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp"
-#probs=np.round(probs, 3)
-#------------------------------------------------------------------------------
-#                             Pc calculate
-#------------------------------------------------------------------------------
-"""
-#Calculates Pc for a given configuration sizex size y
-pc=[]
-pcreal=[]
-seeds=np.linspace(1,20,20,dtype=int)
-probs=np.linspace(0,1,20)
+#-------------------------- crear láminas circulares---------------------------
+seeds=np.linspace(1,4,4,dtype=int)
+probs=[0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,1]
 for seed in seeds:
-  for p in probs:
-    var,preal=UndirectedGraph.pc_calculate(seed,p,sizex,sizey,scale)
-    if var:
-        pcreal.append(preal)
-        pc.append(p)
-        break
-
-print(np.mean(pc),np.mean(pcreal),np.std(pc),np.std(pcreal))
-"""
-#------------------------------------------------------------------------------
-#                             P_real graph
-#------------------------------------------------------------------------------
-"""
-UndirectedGraph.preal_plt(sizex,sizey,scale)
-"""
-#------------------------------------------------------------------------------
-#                            <S> vs P
-#------------------------------------------------------------------------------
-#UndirectedGraph.sVSp(sizex,sizey,scale)
-#------------------------------------------------------------------------------
-#                            connectedness
-#------------------------------------------------------------------------------
-pc=0.39
-UndirectedGraph.connect(sizex,sizey,scale,pc)
-#------------------------------------------------------------------------------
-                           #ns_vs_s
-#------------------------------------------------------------------------------
-#UndirectedGraph.ns_vs_s(sizex,sizey,scale)
-#------------------------------------------------------------------------------
-                           #Sum sns vs p
-#------------------------------------------------------------------------------
-#UndirectedGraph.snsVSp(sizex,sizey,scale)
+    UndirectedGraph.PlotRectReal(p, seed, sizex,sizey,scale,bars=False)
