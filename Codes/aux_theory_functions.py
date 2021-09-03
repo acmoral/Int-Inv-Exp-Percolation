@@ -167,14 +167,9 @@ def connect(sizex,sizey,scale,pc):
      ax1.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
      ax1.xaxis.set_major_formatter(mtick.FuncFormatter(ticks)) 
      ax2.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
-     ax2.xaxis.set_major_formatter(mtick.FuncFormatter(ticks)) 
-     ax1.set_xlabel('p',fontsize=30)
-     ax2.set_xlabel('$p_{real}$',fontsize=30)
-     ax1.set_ylabel(r'$\xi(p)$',fontsize=30)
-     ax1.tick_params( labelsize=20)
-     ax2.tick_params( labelsize=20)
-     #ax.set_xlabel('log(p)')
-     #ax.set_ylabel(r'$log(\epsilon(p))$')
+     ax2.xaxis.set_major_formatter(mtick.FuncFormatter(ticks))
+     ax_params(ax1,xlabel='p',ylabel=r'$\xi(p)$')
+     ax_params(ax2,xlabel=r'$p_{real}$',ylabel=None)
      fig.savefig(path+r'\videos y fotos medidas\Results\30X5FS\connectedness'+'\\''connected_averaged_over_seeds_3.png')#change this for each case
      d={'p':probs,'epsilon':eps_0,'eps_dev':dev,'p_real':p_r,'p_real_dev':p_r_dev}
      df=pd.DataFrame.from_dict(d)
@@ -216,11 +211,8 @@ def P_inf(sizex,sizey,scale):
       fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16, 8))
       ax1.errorbar(probs, pinfs, xerr=0, yerr=pinfs_dev, linestyle='dashed',marker='o',markersize=9)
       ax2.errorbar(probs_real, pinfs, xerr=preal_dev, yerr=pinfs_dev, linestyle='dashed',marker='o',markersize=9)
-      ax1.set_xlabel('p',fontsize=30)
-      ax2.set_xlabel('$p_{real}$',fontsize=30)
-      ax1.set_ylabel(r'$p_{\infty}$',fontsize=30)
-      ax1.tick_params( labelsize=20)
-      ax2.tick_params( labelsize=20)
+      ax_params(ax1, xlabel='p',ylabel=r'$p_{\infty}$')
+      ax_params(ax2, xlabel='$p_{real}$',ylabel=None)
       fig.savefig(path+r'\videos y fotos medidas\Results\30x30NFS\p_inf\pinf_30x30NFS.png')
 #------------------------------------------------------------------------------
 #              ns vs s 
@@ -284,11 +276,8 @@ def sVSp(sizex,sizey,scale):
         fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))
         ax1.errorbar(probs,totalm,xerr=0,yerr=dev, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
         ax2.errorbar(p_real,totalm,xerr=p_real_dev,yerr=dev, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
-        ax1.set_xlabel('p',fontsize=30)
-        ax1.set_ylabel(r'<S>',fontsize=30)
-        ax1.tick_params( labelsize=20)
-        ax2.tick_params( labelsize=20)
-        ax2.set_xlabel(r'$p_{real}$',fontsize=30)
+        ax_params(ax1,xlabel='p',ylabel=r'\langle S \rangle')
+        ax_params(ax2,xlabel=r'$p_{real}$',ylabel=None)
         ax1.set_title(r'cluster size distribution <S> vs p, points= '+str(len(probs)))
         d={'probs':probs,'<s>':totalm,'dev':dev,'p_real':p_real,'p_real_dev':p_real_dev}
         df=pd.DataFrame.from_dict(d)
@@ -328,11 +317,8 @@ def snsVSp(sizex,sizey,scale):
         fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))
         ax1.errorbar(data['p'], data['sum_sns'], xerr=0, yerr=data['sum_sns_dev'], linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
         ax2.errorbar(data['p_real'], data['sum_sns'], xerr=data['p_real_dev'], yerr=data['sum_sns_dev'], linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
-        ax1.set_xlabel('p',fontsize=30)
-        ax2.set_xlabel('$p_{real}$',fontsize=30)
-        ax1.set_ylabel(r'$\sum Sn_s$',fontsize=30)
-        ax1.tick_params( labelsize=20)
-        ax2.tick_params( labelsize=20)
+        ax_params(ax1,xlabel="p",ylabel=r'$\sum Sn_s$')
+        ax_params(ax2,xlabel='$p_{real}$',ylabel=None)
         fig.suptitle(r'cluster size distribution $\sum sn_s$ vs p, points= '+str(len(probs)))
         fig.savefig(path+r'\videos y fotos medidas\Results\30x30NFC\sumSnsp\snsp_30x30NFS.png')#change this for each case
         data.to_csv(path+r'\videos y fotos medidas\Results\30x30NFC\sumSnsp\data_sns_30x30NFS.csv', index = False)
@@ -354,3 +340,13 @@ def linear(g,X,Y):
      pendiente=linear_regressor.coef_
      inter=linear_regressor.intercept_
      print(' La pendiente : %5.3f' %(pendiente)+' \n El intercepto :  %5.3f' %(inter) )
+#------------------------------------------------------------------------------
+#                           Graphing Tools
+#------------------------------------------------------------------------------
+
+def ax_params(ax,**kwargs):
+  ax.set_xlabel(kwargs['xlabel'],fontsize=30)
+  if kwargs['ylabel']:
+   ax.set_ylabel(kwargs['ylabel'],fontsize=30)
+  ax.tick_params( labelsize=20)
+    
