@@ -5,6 +5,8 @@ from sklearn.linear_model import LinearRegression
 import scipy 
 from Graph import *
 import matplotlib.ticker as mtick
+import matplotlib.pyplot as plt
+path=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp'
 #----------------Gyration Radious-------------------------------------------
 def rmean(g,cl):
      S=len(cl)
@@ -12,7 +14,7 @@ def rmean(g,cl):
      return rmean
 #-------------------------------------------------------------------------------
 def Gradious(g,cl):
-     mean=g.rmean(cl)
+     mean=rmean(g,cl)
      R_i=0
      for i in cl:
        value=i-mean
@@ -48,7 +50,7 @@ def pc_calculate(seed,p, sizex,sizey,scale):
      preal=len(g.GetNodes())/(g.L*g.H)
      for cl in clusters:
          if len(cl)>=min(g.L,g.H)*3:
-          if not g.Notpercolates(cl):
+          if not Notpercolates(g,cl):
               return True,preal
      return False,preal
               
@@ -60,7 +62,7 @@ def s_sizes(g,clusters):
       i=0
       for cl in clusters:
          lenght=len(cl)
-         if g.Notpercolates(cl):
+         if Notpercolates(g,cl):
           if lenght in d.keys():
              d[lenght].append(i)
           else:
@@ -73,7 +75,7 @@ def s_sizes(g,clusters):
        return d
 #-------------------------------------------------------------------------------
 def ns(g,clusters):
-      d=g.s_sizes(clusters)#dictionary of sizes
+      d=s_sizes(g,clusters)#dictionary of sizes
       s={}#another dict for the cluster size distribution
       L=g.L
       H=g.H
@@ -82,23 +84,23 @@ def ns(g,clusters):
       return s
 #-------------------------------------------------------------------------------
 def Rs_average(g,clusters):
-     s=g.s_sizes(clusters)
+     s=s_sizes(g,clusters)
      Rs={}
      for key in s.keys():
          if key!=0:
           numbers=s[key]
           ss=0
           for i in numbers:
-            ss+=g.Gradious(clusters[i])/key
+            ss+=Gradious(g,clusters[i])/key
           Rs[key]=ss/len(numbers)
          else:
              Rs[key]=0
      return Rs
 #-------------------------------------------------------------------------------
 def eps(g,clusters):
-     s=g.s_sizes(clusters)
-     n_s=g.ns(clusters)
-     R_s=g.Rs_average(clusters)
+     s=s_sizes(g,clusters)
+     n_s=ns(g,clusters)
+     R_s=Rs_average(g,clusters)
      uppersum=0
      lowersum=0
      for key in s.keys():
@@ -124,11 +126,11 @@ def verify(seed,p,sizex,sizey,scale):
      NetGraphics.DrawSquareNetworkSites(L,H,p,nodelists=clusters,imsizex=sizex,imsizey=sizey,scale=scale,change=False)
      total=len(g.GetNodes())
      N=L*H
-     ns=g.ns(clusters)
-     S=g.s_sizes(clusters)
+     NS=ns(g,clusters)
+     S=s_sizes(g,clusters)
      sume=0
      for s in S.keys():
-         sume+=s*ns[s]
+         sume+=s*NS[s]
      if sume*N==total:
          print(sume*N,total)
          return True
@@ -139,7 +141,7 @@ def verify(seed,p,sizex,sizey,scale):
 #-------------------------------------------------------------------------------
 def connect(sizex,sizey,scale,pc):
      seeds=np.linspace(1,20,20,dtype=int)
-     eps=[]
+     eps_0=[]
      dev=[]
      p_r=[]
      p_r_dev=[]
@@ -152,16 +154,16 @@ def connect(sizex,sizey,scale,pc):
          g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
          g.Fill()
          clusters=g.FindAllClusters()
-         epsilon=g.eps(clusters)
+         epsilon=eps(g,clusters)
          Y.append(epsilon)
          p_real.append(len(g.GetNodes())/(g.L*g.H))
-       eps.append(np.mean(Y))
+       eps_0.append(np.mean(Y))
        dev.append(np.std(Y))
        p_r.append(np.mean(p_real))
        p_r_dev.append(np.std(p_real))
      fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))
-     ax1.plot(probs,eps,marker='D',linestyle=' ',markersize=6,markerfacecolor="None")
-     ax2.errorbar(p_r,eps,xerr=p_r_dev,yerr=dev,marker='D',linestyle=' ',markersize=6,markerfacecolor="None")
+     ax1.plot(probs,eps_0,marker='D',linestyle=' ',markersize=6,markerfacecolor="None")
+     ax2.errorbar(p_r,eps_0,xerr=p_r_dev,yerr=dev,marker='D',linestyle=' ',markersize=6,markerfacecolor="None")
      ax1.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
      ax1.xaxis.set_major_formatter(mtick.FuncFormatter(ticks)) 
      ax2.yaxis.set_major_formatter(mtick.FuncFormatter(ticks))
@@ -173,10 +175,10 @@ def connect(sizex,sizey,scale,pc):
      ax2.tick_params( labelsize=20)
      #ax.set_xlabel('log(p)')
      #ax.set_ylabel(r'$log(\epsilon(p))$')
-     fig.savefig(path+r'\videos y fotos medidas\Results\30X5FS\connectedness'+'\\''connected_averaged_over_seeds_2.png')#change this for each case
-     d={'p':probs,'epsilon':eps,'eps_dev':dev,'p_real':p_r,'p_real_dev':p_r_dev}
+     fig.savefig(path+r'\videos y fotos medidas\Results\30X5FS\connectedness'+'\\''connected_averaged_over_seeds_3.png')#change this for each case
+     d={'p':probs,'epsilon':eps_0,'eps_dev':dev,'p_real':p_r,'p_real_dev':p_r_dev}
      df=pd.DataFrame.from_dict(d)
-     df.to_csv(path+r'\videos y fotos medidas\Results\30X5FS\connectedness\connect_30X5FS_2.csv',index=0)
+     df.to_csv(path+r'\videos y fotos medidas\Results\30X5FS\connectedness\connect_30X5FS_3.csv',index=0)
      
 #------------------------------------------------------------------------------
 #               P_infinite(p) let's see a good behaviour of this thing
@@ -211,7 +213,7 @@ def P_inf(sizex,sizey,scale):
         pinfs_dev.append(np.std(p_inf))
       df=pd.DataFrame({'p':probs,'p_inf':pinfs,'p_inf_dev':pinfs_dev,'p_real':probs_real,'preal_dev':preal_dev})  
       df.to_csv(path+r'\videos y fotos medidas\Results\30x30NFS\p_inf\data_30x30NFS_Pinf.csv',index=0)
-      fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16, 8))#aca puedes cambiar el tamaño de la figura 12 es el ancho y 8 la altura
+      fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16, 8))
       ax1.errorbar(probs, pinfs, xerr=0, yerr=pinfs_dev, linestyle='dashed',marker='o',markersize=9)
       ax2.errorbar(probs_real, pinfs, xerr=preal_dev, yerr=pinfs_dev, linestyle='dashed',marker='o',markersize=9)
       ax1.set_xlabel('p',fontsize=30)
@@ -233,7 +235,7 @@ def ns_vs_s(sizex,sizey,scale):
             g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
             g.Fill()
             clusters=g.FindAllClusters()
-            n_s=g.ns(clusters)
+            n_s=ns(g,clusters)
             keys = np.fromiter(n_s.keys(), dtype=float)
             vals = np.fromiter(n_s.values(), dtype=float)
             keys=np.log(keys)
@@ -268,7 +270,7 @@ def sVSp(sizex,sizey,scale):
            g.Fill()#added this to the filling case
            clusters=g.FindAllClusters()
            p_r.append(len(g.GetNodes())/(g.H*g.L))
-           s=g.s_sizes(clusters)
+           s=s_sizes(g,clusters)
            keys = np.fromiter(s.keys(), dtype=float)
            if keys.any():
             mean=np.sum(keys)/len(keys)  
@@ -310,8 +312,8 @@ def snsVSp(sizex,sizey,scale):
           for seed in seeds:
            g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
            clusters=g.FindAllClusters()
-           S=g.s_sizes(clusters)
-           n_s=g.ns(clusters)
+           S=s_sizes(g,clusters)
+           n_s=ns(g,clusters)
            total=len(g.GetNodes())
            sizetotal=g.L*g.H
            p_real.append(total/sizetotal)
