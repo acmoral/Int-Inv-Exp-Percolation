@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 figure(figsize=(16, 12), dpi=144)
 #from matplotlib import *
-
+import scipy 
 imp.reload(NetGraphics) 
 import random
 import math
@@ -37,6 +37,7 @@ class UndirectedGraph:
     def __init__(self): 
      self.connections,self.circle,self.borderup,self.borderdown={},{},{},{}
      self.counter,self.halfcounter,self.L,self.H=0,0,0,0
+     self.circular=False
 # -----------------------------------------------------------------------------
 #Checking if node is in graph
 # -----------------------------------------------------------------------------
@@ -56,6 +57,8 @@ class UndirectedGraph:
         H=int(H/scale)# in pixel
         self.L=L
         self.H=H
+    def set_circular(self):
+        self.circular=True
 # -----------------------------------------------------------------------------
 #Adding node to graph
 # -----------------------------------------------------------------------------
@@ -223,7 +226,7 @@ class UndirectedGraph:
 # ------------------------------------------------------------------------    
     def PlotCircular(p, seed, sizex,sizey,scale,bars=True):
      scipy.random.seed(seed)
-     g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
+     g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,True)
      g.Fill()
      g.Circlefiller()
      g.fillborder()
@@ -276,8 +279,10 @@ class UndirectedGraph:
 # -----------------------------------------------------------------------
 #Makes the graph for rectangular percolation
 # ------------------------------------------------------------------------ 
-    def MakeRectangularSitePercolation(sizex,sizey,scale,p,seed):
+    def MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,circular):
       g =UndirectedGraph()
+      if circular:
+          g.set_circular()
       g.setLH(sizex, sizey,scale)
       g.AddEdgeRandom2(p,seed)
       g.AddN()
@@ -326,7 +331,10 @@ class UndirectedGraph:
       L=self.L
       H=self.H
       nodes=self.GetNodes()
-      nbrs =[[0, 1], [1, 0] ,[-1,0],[0,-1]]
+      if self.circular:
+         nbrs =[[0, 1], [1, 0] ,[-1,0],[0,-1]]
+      else: 
+         nbrs = [[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]] 
       for node in nodes:
                   for nbr in nbrs:
                      if (node[0]+nbr[0])>L or (node[1]+nbr[1])>H or (node[0]+nbr[0])<0 or  (node[1]+nbr[1])<0:
@@ -344,7 +352,10 @@ class UndirectedGraph:
       L=self.L
       H=self.H
       nodes=self.GetNodes()
-      nbrs =  [[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]  #this was changed from rectangular to circular
+      if self.circular:
+         nbrs =[[0, 1], [1, 0] ,[-1,0],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]] 
+      else: 
+         nbrs = [[0, 1], [1, 0] ,[-1,0],[0,-1]]
       for node in nodes:
                   for nbr in nbrs:
                      if (node[0]+nbr[0])>L or (node[1]+nbr[1])>H or (node[0]+nbr[0])<0 or  (node[1]+nbr[1])<0:

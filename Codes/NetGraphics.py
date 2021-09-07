@@ -3,6 +3,7 @@ import os
 import random
 import tempfile
 import shutil
+import numpy as np
 import math
 import cairo
 import IPython.display
@@ -226,8 +227,8 @@ def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,
     pixely=convert(imsizey)
     hold=convert(9)
     rad=scale/2
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\color\longer'
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Circular\black\longer'
+    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\color'
+    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\black'
     # Background white (in case some nodes missing)
     white = (255, 255, 255)
     color=[0,0,0]
@@ -239,37 +240,40 @@ def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,
      context = cairo.Context(surface)
      # Draw clusters
      for cluster in nodelists:
-            context.set_source_rgb(*color)
             for node in cluster:
                 x = node[0]* scale+hold
                 y = node[1] * scale
                 context.arc(x+rad, y+rad, rad, 0, 2*math.pi)
+                context.set_source_rgb(*color)
                 context.fill()
                 if squares[node]:
                     context.rectangle(x+rad, y+rad, scale,scale)
+                    context.set_source_rgb(*color)
                     context.fill()
                 if node[1]==0:
                  if borderup[node]:
                     context.rectangle(x+scale/2, y ,scale, rad)
+                    context.set_source_rgb(*color)
                     context.fill()
                 if node[1]==49:   
                  if borderdown[node]:
                     context.rectangle(x+scale/2, y+scale/2, scale, rad)
+                    context.set_source_rgb(*color)
                     context.fill()
                             
                # Pick random color for next cluster
-            colorRange = (0, 200)
             if change:
-                color = [random.randint(*colorRange),
-                 random.randint(*colorRange),
-                 random.randint(*colorRange)]
-            x=scale*305+hold
-            dist=0.26
-            r=convert(0.125)
-            for i in range (9):
-             y=convert(dist*3/2+dist*2*i)
-             context.arc(x, y, r,0, 2*math.pi)
-             context.fill()
+                color = list(np.random.choice(range(100), size=3)/100)
+                
+     x=scale*305+hold
+     dist=0.26
+     r=convert(0.125)
+     for i in range (9):
+            color=[0,0,0]
+            context.set_source_rgb(*color)
+            y=convert(dist*3/2+dist*2*i)
+            context.arc(x, y, r,0, 2*math.pi)
+            context.fill()
            
 def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change=True):
     pixelx=convert(imsizex)
