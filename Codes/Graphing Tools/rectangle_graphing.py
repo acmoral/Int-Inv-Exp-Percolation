@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -11,8 +10,8 @@ from itertools import cycle
 from matplotlib import ticker
 cycol = cycle('bgrcmk')
 marker = cycle((',', '+', '.', 'o', '*')) 
-I=0.5*0.003*0.003*0.003/12#The second moment of inertia of the material, respect to theZ axis
-so=0.30#The initial lenght of the material
+I=0.10*0.0025*0.0025*0.0025/12#The second moment of inertia of the material, respect to theZ axis
+so=0.10#The initial lenght of the material
 soc=so*so*so#cube it
 
 class showcase:
@@ -25,7 +24,7 @@ class showcase:
        weight=df['m']
        weight=np.array(weight)/1000
        weight=weight*9.8
-       height=-a
+       height=a
        self.weights=weight
        self.heights=height
        self.last=weight[-1]
@@ -51,10 +50,10 @@ class showcase:
          data.at[prob,'E']=E
          logE=log(E)
          data.at[prob,'logE']=logE
-         af=ufloat(0.5,0)#The measures were cut to precision with the machine, some of the material is consumed, but its sistematic in all the plates
-         bf=ufloat(0.003,0)#this measure is given by the manufacturer, given that they are all cut form the same material, no error is given
+         af=ufloat(0.1,0)#The measures were cut to precision with the machine, some of the material is consumed, but its sistematic in all the plates
+         bf=ufloat(0.0025,0)#this measure is given by the manufacturer, given that they are all cut form the same material, no error is given
          If=af*bf*bf*bf/12
-         sof=ufloat(0.30,0.001)
+         sof=ufloat(0.10,0.001)
          sof=sof*sof*sof
          s=data['pendiente']
          l=data['BSE']
@@ -82,7 +81,7 @@ class showcase:
      def plot_youngs(data,probs):
        fig, (ax1)=plt.subplots(1, 1,figsize=(16, 8))
        ax1.errorbar(probs,data['E'],xerr=data['p_err'],yerr=data['Eerror'],marker='D',ls='',ms=7,markerfacecolor="None", markeredgewidth=2,color='black')
-       ax1.set_xlabel(r'Probabilidad',fontsize=30)
+       ax1.set_xlabel(r'P',fontsize=30)
        ax1.set_ylabel(r'Modulo de Young $[kg/s^2 m]$',fontsize=30) 
        ax1.tick_params(axis='both', labelsize=20)
        ax1.yaxis.offsetText.set_fontsize(20)

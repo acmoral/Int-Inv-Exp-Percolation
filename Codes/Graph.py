@@ -220,7 +220,7 @@ class UndirectedGraph:
       ax.set_ylabel('frecuencia', fontsize = 20.0)
       ax.annotate(' L=%3d \n H= %3d \n O=%3d' %(L,H,len(self.GetNodes())),xy=(0.9, 0.9),xycoords='axes fraction',horizontalalignment='right', verticalalignment='top',fontsize=16)
       ax.set_title(r'$p_{deseado}= $'+ str(p_otro)+'  '+r' $p_{real}=$'+" %5.5f" % (p_real), fontsize = 20.0)
-      ax.figure.savefig(path+r'\cortes\Rectangular\plot\ideal'+'\\' +str(p)+'.png')#change this for each case
+      #ax.figure.savefig(path+r'\cortes\Rectangular\plot\ideal'+'\\' +str(p)+'.png')#change this for each case
 # -----------------------------------------------------------------------
 #This is used to generate the rectangular percolation
 # ------------------------------------------------------------------------    
@@ -244,13 +244,13 @@ class UndirectedGraph:
 # ------------------------------------------------------------------------    
     def PlotRectReal(p, seed, sizex,sizey,scale,bars=True):
      scipy.random.seed(seed)
-     g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale, p,seed)
+     g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale, p,seed,False)
      L=g.L
      H=g.H
      g.Fill()#fill it
      cl = g.FindAllClusters()
-     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
-     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
+     #NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
+     #NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
      g.drawhist(True,p,bars,sizex,sizey)
 # -----------------------------------------------------------------------
 #This returns the actual printed probability, it could be used to compare with the one that is required
@@ -313,7 +313,7 @@ class UndirectedGraph:
        L=self.L
        H=self.H
        ginv=UndirectedGraph()
-       ginv.setLH(L, H, 15.74)
+       ginv.setLH(L, H, 23.6220)
        nodes= self.GetNodes()
        for i in range(0,L):
            for j in range(0,H):

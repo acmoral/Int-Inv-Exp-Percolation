@@ -279,14 +279,14 @@ def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
     hold=convert(9)
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\color\longer'
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\black\longer'
+    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\segundo_semestre\square\black'
+    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\segundo_semestre\square\color'
     # Background white (in case some nodes missing)
     color=[0,0,0]
     if change: 
-     file=dire1+"\\" + str(p)+str(seed)+'.svg'
+     file=dire1+"\\" + str(p)+'pz15.svg'
     else:
-     file=dire2+"\\" + str(p)+str(seed)+'.svg'
+     file=dire2+"\\" + str(p)+'pz15.svg'
     with cairo.SVGSurface(file, pixelx, pixely) as surface:
      context = cairo.Context(surface)
      for cluster in nodelists:
@@ -309,6 +309,12 @@ def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change
       y=convert(dist*3/2+dist*2*i)
       context.arc(x, y, r,0, 2*math.pi)
       context.fill()
+     context.rectangle(0,0,hold+convert(1)+L*scale,H*scale)
+     context.set_line_width(1)
+     context.stroke()
+     context.set_font_size(80)
+     context.move_to(hold/2,convert(5))
+     context.show_text("p="+str(p))
 
 # Copyright (C) Cornell University
 # All rights reserved.
