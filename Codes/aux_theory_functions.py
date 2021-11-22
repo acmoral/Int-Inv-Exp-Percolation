@@ -44,7 +44,7 @@ def Notpercolates(g,cl):
 #------------------------------------------------------------------------------
 def pc_calculate(seed,p, sizex,sizey,scale):
      scipy.random.seed(seed)
-     g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
+     g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,False)
      g.Fill()
      clusters=g.FindAllClusters()
      preal=len(g.GetNodes())/(g.L*g.H)
@@ -139,7 +139,7 @@ def verify(seed,p,sizex,sizey,scale):
          return False
         
 #-------------------------------------------------------------------------------
-def connect(sizex,sizey,scale,pc):
+def connect(sizex,sizey,scale,pc,path):
      seeds=np.linspace(1,20,20,dtype=int)
      eps_0=[]
      dev=[]
@@ -151,7 +151,7 @@ def connect(sizex,sizey,scale,pc):
        p_real=[]
        for seed in seeds:
          scipy.random.seed(seed)
-         g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
+         g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,False)
          g.Fill()
          clusters=g.FindAllClusters()
          epsilon=eps(g,clusters)
@@ -170,10 +170,10 @@ def connect(sizex,sizey,scale,pc):
      ax2.xaxis.set_major_formatter(mtick.FuncFormatter(ticks))
      ax_params(ax1,xlabel='p',ylabel=r'$\xi(p)$')
      ax_params(ax2,xlabel=r'$p_{real}$',ylabel=None)
-     fig.savefig(path+r'\videos y fotos medidas\Results\30X5FS\connectedness'+'\\''connected_averaged_over_seeds_3.png')#change this for each case
+     fig.savefig(path+'\\''connected_averaged_over_seeds_3.png')#change this for each case
      d={'p':probs,'epsilon':eps_0,'eps_dev':dev,'p_real':p_r,'p_real_dev':p_r_dev}
      df=pd.DataFrame.from_dict(d)
-     df.to_csv(path+r'\videos y fotos medidas\Results\30X5FS\connectedness\connect_30X5FS_3.csv',index=0)
+     df.to_csv(path+r'\connect_10x10FC.csv',index=0)
      
 #------------------------------------------------------------------------------
 #               P_infinite(p) let's see a good behaviour of this thing
@@ -190,7 +190,7 @@ def P_inf(sizex,sizey,scale):
         preal=[]
         for seed in seeds:
          scipy.random.seed(seed)
-         g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
+         g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,False)
          #g.Fill()
          clusters=g.FindAllClusters()
          total=len(g.GetNodes())
@@ -217,14 +217,14 @@ def P_inf(sizex,sizey,scale):
 #------------------------------------------------------------------------------
 #              ns vs s 
 #------------------------------------------------------------------------------             
-def ns_vs_s(sizex,sizey,scale):
+def ns_vs_s(sizex,sizey,scale,path):
        seeds=np.linspace(1,20,10,dtype=int)
-       probs=np.linspace(0,1,10)
+       probs=np.linspace(0.05,1,10)
        for p in probs:
            d={}
            for seed in seeds:
             scipy.random.seed(seed)
-            g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
+            g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,False)
             g.Fill()
             clusters=g.FindAllClusters()
             n_s=ns(g,clusters)
@@ -237,17 +237,17 @@ def ns_vs_s(sizex,sizey,scale):
             plt.ylabel(r'n_s')
             plt.title('cluster size distribution  vs s  p=%2.2f' %(p))
             plt.legend()
-            plt.savefig(path+r'\videos y fotos medidas\Results\30x5FS\log(ns)Vslog(s)'+'\\' 'p=%2.2f' %(p)+'.png')#change this for each case
+            plt.savefig(path+r'\log(ns)Vslog(s)'+'\\' 'p=%2.2f' %(p)+'.png')#change this for each case
             d[str(seed)+'_nslog']=keys
             d[str(seed)+'_slog']=vals
            df=pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in d.items() ]))
-           df.to_csv(path+r'\videos y fotos medidas\Results\30X5FS\log(ns)Vslog(s)\data_'+str(p)+'.csv',index=0)
+           df.to_csv(path+r'\log(ns)Vslog(s)\data_'+str(p)+'.csv',index=0)
            plt.close()
       
 #------------------------------------------------------------------------------
 #     s vs p   
 #------------------------------------------------------------------------------      
-def sVSp(sizex,sizey,scale):
+def sVSp(sizex,sizey,scale,path):
         probs=np.linspace(0,1,50)
         seeds=np.linspace(1,20,20,dtype=int)
         totalm=[]
@@ -258,7 +258,7 @@ def sVSp(sizex,sizey,scale):
          p_r=[]
          for seed in seeds:
            scipy.random.seed(seed)
-           g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed)
+           g=UndirectedGraph.MakeRectangularSitePercolation(sizex,sizey,scale,p,seed,False)
            g.Fill()#added this to the filling case
            clusters=g.FindAllClusters()
            p_r.append(len(g.GetNodes())/(g.H*g.L))
@@ -276,13 +276,13 @@ def sVSp(sizex,sizey,scale):
         fig, (ax1,ax2) = plt.subplots(1, 2,figsize=(16,8))
         ax1.errorbar(probs,totalm,xerr=0,yerr=dev, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
         ax2.errorbar(p_real,totalm,xerr=p_real_dev,yerr=dev, linestyle='dashed',marker='o',markersize=9,color='black',mfc='red')
-        ax_params(ax1,xlabel='p',ylabel=r'\langle S \rangle')
+        ax_params(ax1,xlabel='p',ylabel=r'$\langle S \rangle$')
         ax_params(ax2,xlabel=r'$p_{real}$',ylabel=None)
         ax1.set_title(r'cluster size distribution <S> vs p, points= '+str(len(probs)))
         d={'probs':probs,'<s>':totalm,'dev':dev,'p_real':p_real,'p_real_dev':p_real_dev}
         df=pd.DataFrame.from_dict(d)
-        df.to_csv(path+r'\videos y fotos medidas\Results\30x5FC\averageSVsP\30X5FC_SvsP.csv', index = False)
-        fig.savefig(path+r'\videos y fotos medidas\Results\30X5FC\averageSVsP'+'\\' '30X5FC_points= ' +str(len(probs))+'.png')#change this for each case
+        df.to_csv(path+'\\' '10x10FS_SvsP.csv', index = False)
+        fig.savefig(path+'\\' '10X10FS_points= ' +str(len(probs))+'.png')#change this for each case
         
 #------------------------------------------------------------------------------
 #     sns vs p   
