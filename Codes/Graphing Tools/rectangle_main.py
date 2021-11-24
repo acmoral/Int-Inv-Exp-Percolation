@@ -27,8 +27,8 @@ p_err=[0,0,0,0,0,0,0,0]
 df['p_err']=p_err
 pc_real=0.79
 pc_ideal=0.42
-pc_real_dev=0.03 
-pc_ideal_dev=0.15
+pc_real_dev=0.12
+pc_ideal_dev=0.02
 #---------------------P=0.0--------------------------------------------------------------------
 for i in range(8):
  p0=showcase()
