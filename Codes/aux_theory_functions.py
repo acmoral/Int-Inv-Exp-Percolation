@@ -249,7 +249,7 @@ def ns_vs_s(sizex,sizey,scale,path):
 #------------------------------------------------------------------------------      
 def sVSp(sizex,sizey,scale,path):
         probs=np.linspace(0,1,50)
-        seeds=np.linspace(1,20,20,dtype=int)
+        seeds=np.linspace(1,1000,1000,dtype=int)
         totalm=[]
         p_real=[]
         p_real_dev=[]
