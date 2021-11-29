@@ -8,6 +8,7 @@ from uncertainties.umath import *
 from uncertainties.umath import * 
 from itertools import cycle
 from matplotlib import ticker
+import statsmodels.api as sm
 cycol = cycle('bgrcmk')
 marker = cycle((',', '+', '.', 'o', '*')) 
 I=0.10*0.0025*0.0025*0.0025/12#The second moment of inertia of the material, respect to theZ axis
