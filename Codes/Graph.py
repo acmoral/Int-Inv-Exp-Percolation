@@ -249,8 +249,8 @@ class UndirectedGraph:
      H=g.H
      g.Fill()#fill it
      cl = g.FindAllClusters()
-     #NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
-     #NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
+     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
+     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
      g.drawhist(True,p,bars,sizex,sizey)
 # -----------------------------------------------------------------------
 #This returns the actual printed probability, it could be used to compare with the one that is required

@@ -225,10 +225,10 @@ def DrawHexagonNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale,seed, 
 def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,nodelists, scale,seed, change=True, imfile=None):
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
-    hold=convert(9)
+    hold=convert(10)
     rad=scale/2
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\color'
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\black'
+    dire1=r'C:\Users\acmor\Desktop\color'
+    dire2=r'C:\Users\acmor\Desktop\black'
     # Background white (in case some nodes missing)
     white = (255, 255, 255)
     color=[0,0,0]
@@ -278,15 +278,15 @@ def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,
 def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change=True):
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
-    hold=convert(9)
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\segundo_semestre\square\black'
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\segundo_semestre\square\color'
+    hold=convert(10)
+    dire2=r'C:\Users\acmor\Desktop\black'
+    dire1=r'C:\Users\acmor\Desktop\color'
     # Background white (in case some nodes missing)
     color=[0,0,0]
     if change: 
-     file=dire1+"\\" + str(p)+'pz15.svg'
+     file=dire1+"\\" + str(p)+'.svg'
     else:
-     file=dire2+"\\" + str(p)+'pz15.svg'
+     file=dire2+"\\" + str(p)+'.svg'
     with cairo.SVGSurface(file, pixelx, pixely) as surface:
      context = cairo.Context(surface)
      for cluster in nodelists:
@@ -302,15 +302,8 @@ def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change
           color = (random.randint(*colorRange),
                   random.randint(*colorRange),
                   random.randint(*colorRange))
-     x=scale*305+hold
-     dist=0.26
-     r=convert(0.125)
-     for i in range (9):
-      y=convert(dist*3/2+dist*2*i)
-      context.arc(x, y, r,0, 2*math.pi)
-      context.fill()
-     context.rectangle(0,0,hold+convert(1)+L*scale,H*scale)
-     context.set_line_width(1)
+     context.rectangle(0,0,hold+L*scale,H*scale)
+     context.set_line_width(3)
      context.stroke()
      context.set_font_size(80)
      context.move_to(hold/2,convert(5))
