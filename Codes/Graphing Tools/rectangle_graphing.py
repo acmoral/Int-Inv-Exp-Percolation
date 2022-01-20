@@ -22,13 +22,13 @@ class showcase:
      def read(self,path,step):
        df=pd.read_csv(path)
        a=df['y']
-       weight=df['m']
-       weight=np.array(weight)/1000
-       weight=weight*10
-       height=-a
-       self.weights=weight
-       self.heights=height
-       self.last=weight[-1]
+      weight=df['m']
+      weight=np.array(weight)/1000
+      weight=weight*10
+      weight=weight*9.8
+      height=-a
+      self.weights=weight
+      self.heights=height
      def init_tab(probs,cols):
         return pd.DataFrame(index=probs, columns=cols)
      def returns(self,path,step,stop,prob):
