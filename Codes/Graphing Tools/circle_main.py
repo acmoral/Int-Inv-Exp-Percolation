@@ -11,13 +11,12 @@ import numpy as np
 import os
 from itertools import cycle
 import pandas as pd
-I=0.5*0.003*0.003*0.003/12#The second moment of inertia of the material, respect to theZ axis
-so=0.30#The initial lenght of the material
-soc=so*so*so#cube it
-cycol = cycle(('darkgoldenrod','navy','purple','grey','teal','black','darkred'))
+
+
+cyful= cycle(('none','full'))
 marker = cycle(('s', '+', 'd', 'o', '*')) 
 fig, (ax1)=plt.subplots(1,1,figsize=(16,8))
-path=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\videos y fotos medidas\misma-semilla\excel'
+path=r'C:\Users\acmor\Desktop\excel_semilla'
 probs=[1,2,3,4]
 columns=['pendiente','intercepto','R','BSE','last','lastLog','lastLogerr','E','logE','Eerror','logEerror','p_err']
 df=showcase.init_tab(probs,columns)
@@ -32,16 +31,17 @@ for i in range(4):
  p0=showcase()
  stop0=stops[i]
  X0,Y0,weight0,height0=p0.returns(os.path.join(path,'medida'+names[i]+'_good.csv'),1,stop0,probs[i])
- ax1.errorbar(weight0,height0,marker=next(marker),ls=' ',ms=6,label='seed='+names[i],c=next(cycol),markerfacecolor="None", markeredgewidth=2)
+ ax1.errorbar(weight0,height0,marker=next(marker),ls=' ',ms=8,c='black',fillstyle=next(cyful), markeredgewidth=2)
+ ax1.text(weight0[len(weight0)-1]+0.025,height0[len(height0)-1]-0.0025,str(probs[i]),fontsize=21)
  ax1.plot(X0,Y0,color='black',ls='dashed')
+ ax1.set_xlim(0,3.6)
  p0.tab(stop0,probs[i],df)
 #
 #---------------------------legends,titles-------------------
 #-----------------------------------------------------------
-ax1.set_xlabel(r'peso $[N] \pm 9.8\times10^{s-4}$',fontsize=30)
-ax1.set_ylabel(r'Desplazamiento en Y $[m] $',fontsize=30)
+ax1.set_xlabel(r'Peso $[N]$',fontsize=30)
+ax1.set_ylabel(r' Flexión en Y $[m] $',fontsize=30)
 ax1.tick_params(axis='both', labelsize=20)
-ax1.set_title(r'Ancho= 3mm, Hueco= 1mm',size=30)
 ax1.legend(prop={'size': 20})
 ax1.xaxis.offsetText.set_fontsize(20)
 #-----------------------------------------------------------------
@@ -54,7 +54,7 @@ showcase.plot_youngs(df,probs)
 pd.set_option('display.max_colwidth', None)
 pd.set_option('display.max_columns', None) 
 display(df)
-df.to_csv(r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\videos y fotos medidas\misma-semilla\excel\regresiones.csv')
+df.to_csv(r'C:\Users\acmor\Desktop\excel_semilla\regression.csv')
 #-----------------------------------------------------------------
 # Young modulus graphics,with log log, find linear regression
 #-----------------------------------------------------------------
