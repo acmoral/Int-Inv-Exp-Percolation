@@ -8,6 +8,8 @@ Created on Tue May 11 18:34:10 2021
 from rectangle_graphing import *
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 import os
 from itertools import cycle
 import pandas as pd
@@ -36,6 +38,10 @@ for i in range(8):
  ax1.plot(X0,Y0,color='black')
  ax1.set_ylim(0,0.1)
  p0.tab(stop0,probs[i],df)
+ax1.minorticks_on()
+ax1.tick_params(which='both', width=2)
+ax1.tick_params(which='minor', length=5)
+ax1.tick_params(which='major', length=8)
 #
 #---------------------------legends,titles-------------------
 #-----------------------------------------------------------

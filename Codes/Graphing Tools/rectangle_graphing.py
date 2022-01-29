@@ -87,6 +87,10 @@ class showcase:
        ax1.tick_params(axis='both', labelsize=20)
        ax1.yaxis.offsetText.set_fontsize(20)
        ax1.xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:.2f}"))
+       ax1.minorticks_on()
+       ax1.tick_params(which='both', width=2)
+       ax1.tick_params(which='minor', length=5)
+       ax1.tick_params(which='major', length=8)
        #for i_x, i_y in zip(probs[:5], data['last'][:5]):
         # ax1.text(i_x, i_y, '({}, {:.2e})'.format(i_x, i_y))
      def plot_youngs_log_log(data,probs,pc_real,pc_ideal):
@@ -106,6 +110,10 @@ class showcase:
        linear_regressor.fit(X, Y)
        Y_pred = linear_regressor.predict(X)
        ax1.plot(X,Y_pred,color='black')
+       ax1.minorticks_on()
+       ax1.tick_params(which='both', width=2)
+       ax1.tick_params(which='minor', length=5)
+       ax1.tick_params(which='major', length=8)
        print(linear_regressor.coef_ )
        print(linear_regressor.intercept_)
        print(linear_regressor.score(X,Y))
