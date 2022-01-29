@@ -40,6 +40,10 @@ for i in range(6):
  ax1.text(weight0[len(weight0)-1]-0.6,height0[len(height0)-1]+0.009,str(probs[i]),fontsize=20)
  ax1.set_ylim(0,0.31)
  p0.tab(stop0,probs[i],df)
+ax1.minorticks_on()
+ax1.tick_params(which='both', width=2)
+ax1.tick_params(which='minor', length=5)
+ax1.tick_params(which='major', length=8)
 #
 #---------------------------legends,titles-------------------
 #-----------------------------------------------------------
