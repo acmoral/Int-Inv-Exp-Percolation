@@ -44,6 +44,10 @@ ax1.set_ylabel(r' Flexión en Y $[m] $',fontsize=30)
 ax1.tick_params(axis='both', labelsize=20)
 ax1.legend(prop={'size': 20})
 ax1.xaxis.offsetText.set_fontsize(20)
+ax1.minorticks_on()
+ax1.tick_params(which='both', width=2)
+ax1.tick_params(which='minor', length=5)
+ax1.tick_params(which='major', length=8)
 #-----------------------------------------------------------------
 # Young modulus graphics
 #-----------------------------------------------------------------

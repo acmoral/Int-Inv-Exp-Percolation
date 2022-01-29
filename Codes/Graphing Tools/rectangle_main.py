@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 from itertools import cycle
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 import pandas as pd
 I=0.1*0.0025*0.0025*0.0025/12#The second moment of inertia of the material, respect to theZ axis
 so=0.10#The initial lenght of the material
@@ -46,6 +48,10 @@ ax1.tick_params(axis='both', labelsize=20)
 ax1.set_title(r'Ancho= 2.5mm, Hueco= 1.5mm',size=30)
 ax1.legend(prop={'size': 20})
 ax1.xaxis.offsetText.set_fontsize(20)
+ax1.minorticks_on()
+ax1.tick_params(which='both', width=2)
+ax1.tick_params(which='minor', length=5)
+ax1.tick_params(which='major', length=8)
 #-----------------------------------------------------------------
 # Young modulus graphics
 #-----------------------------------------------------------------
