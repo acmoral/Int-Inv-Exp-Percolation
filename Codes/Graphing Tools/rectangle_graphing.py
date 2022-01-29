@@ -8,6 +8,8 @@ from uncertainties import ufloat
 from uncertainties.umath import *
 from uncertainties.umath import * 
 from itertools import cycle
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 from matplotlib import ticker
 cycol = cycle('bgrcmk')
 marker = cycle((',', '+', '.', 'o', '*')) 
@@ -20,8 +22,8 @@ class showcase:
        self.weights,self.heights,self.Ypred,self.X=[],[],[],[]
        self.pendiente,self.R,self.int,self.BSE,self.last=0,0,0,0,0
      def read(self,path,step):
-       df=pd.read_csv(path)
-       a=df['y']
+      df=pd.read_csv(path)
+      a=df['y']
       weight=df['m']
       weight=np.array(weight)/1000
       weight=weight*10
@@ -42,11 +44,11 @@ class showcase:
          data.at[prob,'intercepto']=float("{:.6f}".format(float(self.int)))
          data.at[prob,'R']=float("{:.3f}".format(float(self.R)))
          data.at[prob,'BSE']=float("{:.8f}".format(float(self.BSE)))
-         data.at[prob,'last']=self.last
-         data.at[prob,'lastLog']=log(self.last)
-         lasterr=ufloat(self.last,0.00098)
-         lasterr=log(lasterr).std_dev
-         data.at[prob,'lastLogerr']=lasterr
+         #data.at[prob,'last']=self.last
+         #data.at[prob,'lastLog']=log(self.last)
+         #lasterr=ufloat(self.last,0.00098)
+         #lasterr=log(lasterr).std_dev
+         #data.at[prob,'lastLogerr']=lasterr
          E=soc/(3*I*pendiente)
          data.at[prob,'E']=E
          logE=log(E)
@@ -87,6 +89,10 @@ class showcase:
        ax1.tick_params(axis='both', labelsize=20)
        ax1.ticklabel_format(useOffset=False)
        ax1.xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:.2f}"))
+       ax1.minorticks_on()
+       ax1.tick_params(which='both', width=2)
+       ax1.tick_params(which='minor', length=5)
+       ax1.tick_params(which='major', length=8)
        #for i_x, i_y in zip(probs[:5], data['last'][:5]):
         # ax1.text(i_x, i_y, '({}, {:.2e})'.format(i_x, i_y))
      def plot_youngs_log_log(data,probs,pc_real,pc_ideal):
@@ -106,6 +112,10 @@ class showcase:
        linear_regressor.fit(X, Y)
        Y_pred = linear_regressor.predict(X)
        ax1.plot(X,Y_pred,color='black')
+       ax1.minorticks_on()
+       ax1.tick_params(which='both', width=2)
+       ax1.tick_params(which='minor', length=5)
+       ax1.tick_params(which='major', length=8)
        print(linear_regressor.coef_ )
        print(linear_regressor.intercept_)
        print(linear_regressor.score(X,Y))
@@ -129,6 +139,10 @@ class showcase:
        ax1.tick_params(axis='both', labelsize=20)
        ax1.yaxis.offsetText.set_fontsize(20)
        ax1.xaxis.set_major_formatter(ticker.StrMethodFormatter("{x:.2f}"))
+       ax1.minorticks_on()
+       ax1.tick_params(which='both', width=2)
+       ax1.tick_params(which='minor', length=5)
+       ax1.tick_params(which='major', length=8)
        #for i_x, i_y in zip(probs[:5], data['last'][:5]):
         # ax1.text(i_x, i_y, '({}, {:.2e})'.format(i_x, i_y))
        ax1.legend(prop={'size': 20})

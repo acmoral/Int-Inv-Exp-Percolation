@@ -11,6 +11,8 @@ import numpy as np
 import os
 from itertools import cycle
 import pandas as pd
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 I=0.5*0.003*0.003*0.003/12#The second moment of inertia of the material, respect to theZ axis
 so=0.30#The initial lenght of the material
 soc=so*so*so#cube it
@@ -41,6 +43,10 @@ for i in range(7):
  ax1.plot(X0,Y0,color='black')
  ax1.set_ylim(0,0.31)
  p0.tab(stop0,probs[i],df)
+ax1.minorticks_on()
+ax1.tick_params(which='both', width=2)
+ax1.tick_params(which='minor', length=5)
+ax1.tick_params(which='major', length=8)
 #
 #---------------------------legends,titles-------------------
 #-----------------------------------------------------------
