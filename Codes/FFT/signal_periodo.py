@@ -13,7 +13,7 @@ from scipy.misc import electrocardiogram
 from scipy.signal import find_peaks
 from scipy.signal import argrelextrema
 import pylab as pyl
-path=r'C:\Users\acmor\Desktop\vibrations\medidas_2\corner'
+path=r'C:\Users\acmor\Desktop\vibrations\medidas_2'
 class signal:
     def __init__(self,file,stop,p): 
         self.name=file
@@ -69,9 +69,9 @@ if __name__ == "__main__":
 #-------------------------------------------------------------------------
 #              data and global things
 #---------------------------------------------------------------------------
-   names=[r'\0.csv',r'\0.03.csv',r'\0.06.csv',r'\0.09.csv']#,r'\0.09.csv',r'\0.12.csv',r'\0.15.csv',r'\0.18.csv',r'\0.21.csv']
-   stops=[30,30,30,60]
-   p=[0,0.03,0.06,0.09]
+   names=[r'\0.csv',r'\0.03.csv',r'\0.06.csv',r'\0.09.csv',r'\0.12.csv',r'\0.15.csv',r'\0.18.csv',r'\0.21.csv']
+   stops=[1740,820,210,1070,850,700,650,580]
+   p=[0,0.03,0.06,0.09,0.12,0.15,0.18,0.21]
    n=[421,423,425,427,422,424,426,428]
    sign=[signal(i,stops[names.index(i)],p[names.index(i)]) for i in names]
    x=np.linspace(0, 5,100)
@@ -84,12 +84,12 @@ if __name__ == "__main__":
        s.read()
        s.frequency()
        ax=pyl.subplot(n[i])
-       ax.plot(s.t, s.y)
+       ax.plot(s.t, s.y,color ='black')
        s.amplitud()
        m, t, b = s.exponential_fit()
-       ax.plot(x,Exp(x, m, t, b))
-       ax.plot(s.t[s.peaks], s.y[s.peaks],'x')
-       ax.plot(s.t[s.minimos[0][0:10]], s.y[s.minimos[0][0:10]],'x')
+       #ax.plot(x,Exp(x, m, t, b))
+       #ax.plot(s.t[s.peaks], s.y[s.peaks],'x')
+       #ax.plot(s.t[s.minimos[0][0:10]], s.y[s.minimos[0][0:10]],'x')
        ax.set_title(str(s.p))
        ax.set_xlim(0,7)
        i+=1
