@@ -5,6 +5,7 @@ import tempfile
 import shutil
 import numpy as np
 import math
+from itertools import cycle
 import cairo
 import IPython.display
 try:
@@ -278,9 +279,15 @@ def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,
 def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change=True):
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
+<<<<<<< HEAD
     hold=convert(10)
     dire2=r'C:\Users\acmor\Desktop\black'
     dire1=r'C:\Users\acmor\Desktop\color'
+=======
+    hold=convert(9)
+    dire2=r'C:/Users/acmor/Desktop\black'
+    dire1=r'C:/Users/acmor/Desktop\color'
+>>>>>>> svg
     # Background white (in case some nodes missing)
     color=[0,0,0]
     if change: 
@@ -297,13 +304,28 @@ def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change
             context.rectangle(x, y,  scale, scale)
             context.fill()
          # Pick random color for next cluster
-         colorRange = (0, 200)
          if change:
+<<<<<<< HEAD
           color = (random.randint(*colorRange),
                   random.randint(*colorRange),
                   random.randint(*colorRange))
      context.rectangle(0,0,hold+L*scale,H*scale)
      context.set_line_width(3)
+=======
+            color = list(np.random.random_sample((3,)))
+            print(color)
+     x=scale*305+hold
+     dist=0.26
+     r=convert(0.125)
+     color=[0,0,0]
+     context.set_source_rgb(*color)
+     for i in range (9):
+      y=convert(dist*3/2+dist*2*i)
+      context.arc(x, y, r,0, 2*math.pi)
+      context.fill()
+     context.rectangle(0,0,hold+convert(1)+L*scale,H*scale)
+     context.set_line_width(1)
+>>>>>>> svg
      context.stroke()
      context.set_font_size(80)
      context.move_to(hold/2,convert(5))

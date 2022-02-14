@@ -313,9 +313,9 @@ class UndirectedGraph:
        L=self.L
        H=self.H
        ginv=UndirectedGraph()
-       ginv.setLH(L, H, 23.6220)
+       ginv.setLH(L+1, H, 23.6220)
        nodes= self.GetNodes()
-       for i in range(0,L):
+       for i in range(0,L+1):
            for j in range(0,H):
                if (i,j) in nodes:
                    nodes.remove((i,j))
