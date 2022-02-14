@@ -15,8 +15,9 @@ sizex=20
 sizey=10
 scale=23.6220
 seed=1
-path=r"C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp"
+path=r"C:/Users/acmor/Desktop"
 #-------------------------- crear láminas circulares---------------------------
-probs=[0,0.05,0.1,0.15,0.2,0.24,0.28,0.32,0.45]
+probs=[0,0.05,0.1,0.15,0.2,0.25,0.30,0.35,0.4,0.39,0.45]
 for p in probs:
     UndirectedGraph.PlotRectReal(p, seed, sizex,sizey,scale,bars=True)
+    

@@ -5,6 +5,7 @@ import tempfile
 import shutil
 import numpy as np
 import math
+from itertools import cycle
 import cairo
 import IPython.display
 try:
@@ -279,8 +280,8 @@ def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change
     pixelx=convert(imsizex)
     pixely=convert(imsizey)
     hold=convert(9)
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\segundo_semestre\square\black'
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Rectangular\segundo_semestre\square\color'
+    dire2=r'C:/Users/acmor/Desktop\black'
+    dire1=r'C:/Users/acmor/Desktop\color'
     # Background white (in case some nodes missing)
     color=[0,0,0]
     if change: 
@@ -297,14 +298,14 @@ def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change
             context.rectangle(x, y,  scale, scale)
             context.fill()
          # Pick random color for next cluster
-         colorRange = (0, 200)
          if change:
-          color = (random.randint(*colorRange),
-                  random.randint(*colorRange),
-                  random.randint(*colorRange))
+            color = list(np.random.random_sample((3,)))
+            print(color)
      x=scale*305+hold
      dist=0.26
      r=convert(0.125)
+     color=[0,0,0]
+     context.set_source_rgb(*color)
      for i in range (9):
       y=convert(dist*3/2+dist*2*i)
       context.arc(x, y, r,0, 2*math.pi)

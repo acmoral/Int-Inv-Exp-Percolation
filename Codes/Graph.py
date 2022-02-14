@@ -249,8 +249,8 @@ class UndirectedGraph:
      H=g.H
      g.Fill()#fill it
      cl = g.FindAllClusters()
-     #NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
-     #NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
+     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=False)
+     NetGraphics.DrawSquareNetworkSites(L,H,p,sizex,sizey,cl,scale,seed,change=True)
      g.drawhist(True,p,bars,sizex,sizey)
 # -----------------------------------------------------------------------
 #This returns the actual printed probability, it could be used to compare with the one that is required
@@ -313,9 +313,9 @@ class UndirectedGraph:
        L=self.L
        H=self.H
        ginv=UndirectedGraph()
-       ginv.setLH(L, H, 23.6220)
+       ginv.setLH(L+1, H, 23.6220)
        nodes= self.GetNodes()
-       for i in range(0,L):
+       for i in range(0,L+1):
            for j in range(0,H):
                if (i,j) in nodes:
                    nodes.remove((i,j))
