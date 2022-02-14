@@ -124,6 +124,10 @@ if __name__ == "__main__":
    Y_pred = linear_regressor.predict(X)  # make predictions
    ols = sm.OLS(Y, X)
    ols_result = ols.fit()
+   residuals = Y-Y_pred
+   residuals= residuals**2
+   standard_error = (sum(residuals)/(10-2))**0.5
+   print('hi:'+ str(standard_error))
    BSE=ols_result.bse
    Pendiente=linear_regressor.coef_
    Intercepto=linear_regressor.intercept_

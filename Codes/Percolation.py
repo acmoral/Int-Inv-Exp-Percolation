@@ -14,7 +14,7 @@ import numpy as np
 sizex=50
 sizey=4
 scale=23.6220
-path=r"C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\videos y fotos medidas\Results"
+path=r"C:/Users/acmor/Desktop"
 #-------------------------- crear láminas circulares---------------------------
 seed=[0,2,3,20,40,60,80,100,120,140]
 probs=[0,0.01,0.02,0.03,0.06,0.09,0.12,0.15,0.18,0.21]
