@@ -109,6 +109,10 @@ class showcase:
        linear_regressor = LinearRegression()  # create object for the class
        linear_regressor.fit(X, Y)
        Y_pred = linear_regressor.predict(X)
+       residuals = Y-Y_pred
+       residuals= residuals**2
+       standard_error = (sum(residuals)/(10-2))**0.5
+       print('hi:'+ str(standard_error))
        ax1.plot(X,Y_pred,color='black')
        ax1.minorticks_on()
        ax1.tick_params(which='both', width=2)
