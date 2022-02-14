@@ -105,6 +105,10 @@ class showcase:
        X=logs_real.reshape(-1,1)
        Y=np.array(data['logE'])
        Y=Y.reshape(-1,1)
+       residuals = Y-Y_pred
+       residuals= residuals**2
+       standard_error = (sum(residuals)/(10-2))**0.5
+       print('hi:'+ str(standard_error))
        linear_regressor = LinearRegression()  # create object for the class
        linear_regressor.fit(X, Y)
        Y_pred = linear_regressor.predict(X)
