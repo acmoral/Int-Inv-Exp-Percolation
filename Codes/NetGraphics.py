@@ -8,13 +8,14 @@ import math
 from itertools import cycle
 import cairo
 import IPython.display
+
 try:
     import Image
     import ImageDraw
     import ImageFont
 except:
     try:
-        from PIL import Image, ImageDraw, ImageFont,ImagePath
+        from PIL import Image, ImageDraw, ImageFont, ImagePath
     except:
         raise Error("PIL package not installed")
 
@@ -25,37 +26,36 @@ except:
 # image display
 
 
-def Display(image_file='tmpf.jpg'):
+def Display(image_file="tmpf.jpg"):
     """Display(image_file) attempts to display the specified image_file on
     the screen, using the Preview application on Mac OS X, the ImageMagick
     display utility on other posix platforms (e.g., Linux)
     and the Microsoft mspaint utility on Windows platforms.
     """
     os_name = os.name
-    if os_name == 'nt':  # Windows
+    if os_name == "nt":  # Windows
         try:
-            os.system('start mspaint %s' % image_file)
+            os.system("start mspaint %s" % image_file)
         except:
-            raise OSError("Cannot display %s with Windows mspaint" %
-                          image_file)
+            raise OSError("Cannot display %s with Windows mspaint" % image_file)
     else:
         os_uname = os.uname()
-        if os_uname[0] == 'Darwin':  # Mac OS X, assume no X server running
+        if os_uname[0] == "Darwin":  # Mac OS X, assume no X server running
             try:
-                os.system('open /Applications/Preview.app %s &' % image_file)
+                os.system("open /Applications/Preview.app %s &" % image_file)
             except:
-                raise OSError("Cannot display %s with Preview application" %
-                              image_file)
+                raise OSError("Cannot display %s with Preview application" % image_file)
 
-        elif os_name == 'posix':  # Linux, Unix, etc.
+        elif os_name == "posix":  # Linux, Unix, etc.
             try:
-                os.system('display %s &' % image_file)
+                os.system("display %s &" % image_file)
             except:
-                raise OSError("Cannot display %s with ImageMagick display. ImageMagick display requires a running X server." %
-                              image_file)
+                raise OSError(
+                    "Cannot display %s with ImageMagick display. ImageMagick display requires a running X server."
+                    % image_file
+                )
         else:
             raise OSError("no known display function for OS %s" % os_name)
-
 
 
 # -----------------------------------------------------------------------
@@ -63,9 +63,15 @@ def Display(image_file='tmpf.jpg'):
 # 2D percolation graphics
 
 
-def DrawSquareNetworkBonds(graph, nodelists=None,
-                           dotsize=None, linewidth=None,
-                           imsize=800, windowMargin=0.02, imfile=None):
+def DrawSquareNetworkBonds(
+    graph,
+    nodelists=None,
+    dotsize=None,
+    linewidth=None,
+    imsize=800,
+    windowMargin=0.02,
+    imfile=None,
+):
     """DrawSquareNetworkBonds(g) will draw an image file of the 2D
     square--lattice bond percolation network g, with bonds and sites shown,
     and then will display the result.
@@ -88,13 +94,18 @@ def DrawSquareNetworkBonds(graph, nodelists=None,
         imfile = tempfile.mktemp()  # make unique filename in /tmp
         imfile += "_square_network_bonds.png"
     white = (255, 255, 255)  # background color
-    im = Image.new('RGB', (imsize, imsize), color=white)
+    im = Image.new("RGB", (imsize, imsize), color=white)
     draw = ImageDraw.Draw(im)
     # Nodes = (ix, iy) running from (0,0) to (L-1,L-1)
     # Won't always work for site percolation:
     # Assumes entire row and column of nodes not missing
-    L = max(max([node[0] for node in graph.GetNodes()]),
-            max([node[1] for node in graph.GetNodes()])) + 1.0
+    L = (
+        max(
+            max([node[0] for node in graph.GetNodes()]),
+            max([node[1] for node in graph.GetNodes()]),
+        )
+        + 1.0
+    )
     # Default dot size and line width depends on L
     if dotsize is None:
         dotsize = max((1 - 2 * windowMargin) * imsize / (4 * L), 1)
@@ -108,26 +119,34 @@ def DrawSquareNetworkBonds(graph, nodelists=None,
         # node = (ix, iy) running from (0,0) to (L-1,L-1)
         # Displace on screen to 1/2 ... L-1/2, with margins on each side
         def ScreenPos(i):
-            return (windowMargin + ((i + 0.5) / L) *
-                    (1 - 2 * windowMargin)) * imsize
+            return (windowMargin + ((i + 0.5) / L) * (1 - 2 * windowMargin)) * imsize
+
         # Find screen location (sx,sy) for node
         for node in cluster:
             ix, iy = node  # node = (ix,iy) running from (0,0) to (L-1,L-1)
             sx = ScreenPos(ix)
             sy = ScreenPos(iy)
-            draw.ellipse(((sx - dotsize / 2, sy - dotsize / 2),
-                          (sx + dotsize / 2, sy + dotsize / 2)), fill=color)
-        # Define function to draw thick line
+            draw.ellipse(
+                (
+                    (sx - dotsize / 2, sy - dotsize / 2),
+                    (sx + dotsize / 2, sy + dotsize / 2),
+                ),
+                fill=color,
+            )
+            # Define function to draw thick line
 
             def DrawThickLine(sx1, sy1, sx2, sy2):
-                perpLength = scipy.sqrt((sy2 - sy1)**2 + (sx2 - sx1)**2)
+                perpLength = scipy.sqrt((sy2 - sy1) ** 2 + (sx2 - sx1) ** 2)
                 perpx = ((sy2 - sy1) / perpLength) * linewidth / 2
                 perpy = (-(sx2 - sx1) / perpLength) * linewidth / 2
-                polyFromLine = ((sx1 + perpx, sy1 + perpy),
-                                (sx1 - perpx, sy1 - perpy),
-                                (sx2 - perpx, sy2 - perpy),
-                                (sx2 + perpx, sy2 + perpy))
+                polyFromLine = (
+                    (sx1 + perpx, sy1 + perpy),
+                    (sx1 - perpx, sy1 - perpy),
+                    (sx2 - perpx, sy2 - perpy),
+                    (sx2 + perpx, sy2 + perpy),
+                )
                 draw.polygon(polyFromLine, fill=color)
+
             # Find neighbors
             neighbors = graph.GetNeighbors(node)
             for neighbor in neighbors:
@@ -136,10 +155,12 @@ def DrawSquareNetworkBonds(graph, nodelists=None,
                     continue
                 # Find screen location (sxNbr,syNbr)) for edge
                 ixNbr, iyNbr = neighbor
-                sxNbr = (windowMargin + ((ixNbr + 0.5) / L)
-                         * (1 - 2 * windowMargin)) * imsize
-                syNbr = (windowMargin + ((iyNbr + 0.5) / L)
-                         * (1 - 2 * windowMargin)) * imsize
+                sxNbr = (
+                    windowMargin + ((ixNbr + 0.5) / L) * (1 - 2 * windowMargin)
+                ) * imsize
+                syNbr = (
+                    windowMargin + ((iyNbr + 0.5) / L) * (1 - 2 * windowMargin)
+                ) * imsize
 
                 # Periodic boundary conditions make this tricky:
                 # bonds which cross boundary drawn half a bond length both ways
@@ -168,170 +189,193 @@ def DrawSquareNetworkBonds(graph, nodelists=None,
                     DrawThickLine(sx, sy, sxNbr, syNbr)
         # Pick random color for next cluster
         colorRange = (0, 200)
-        color = (random.randint(*colorRange),
-                 random.randint(*colorRange),
-                 random.randint(*colorRange))
+        color = (
+            random.randint(*colorRange),
+            random.randint(*colorRange),
+            random.randint(*colorRange),
+        )
     im.save(imfile)
     Display(imfile)
     return im
-def convert(a):
-    return int(a/ 0.00635)#Resolution,convert cm to pixel from 400 dpi
 
-def DrawHexagonNetworkSites(graph,L,H,p, imsizex,imsizey,nodelists, scale,seed, change=True, imfile=None):
-    pixelx=convert(imsizex)
-    pixely=convert(imsizey)
-    side=6
-    hold=convert(5)
-    dire1=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Hexagon\color'
-    dire2=r'C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Hexagon\black'
+
+def convert(a):
+    return int(a / 0.00635)  # Resolution,convert cm to pixel from 400 dpi
+
+
+def DrawHexagonNetworkSites(
+    graph, L, H, p, imsizex, imsizey, nodelists, scale, seed, change=True, imfile=None
+):
+    pixelx = convert(imsizex)
+    pixely = convert(imsizey)
+    side = 6
+    hold = convert(5)
+    dire1 = r"C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Hexagon\color"
+    dire2 = r"C:\Users\Carolina\OneDrive\Escritorio\Int inv Exp\cortes\Hexagon\black"
     # Background white (in case some nodes missing)
     white = (255, 255, 255)
-    color=(0,0,0)
-    im = Image.new('RGB', (pixelx, pixely), white)
-    if (scale > 1):
+    color = (0, 0, 0)
+    im = Image.new("RGB", (pixelx, pixely), white)
+    if scale > 1:
         draw = ImageDraw.Draw(im)
     # Draw clusters
     for cluster in nodelists:
-        if (scale == 1):
+        if scale == 1:
             for node in cluster:
-                x=node[0]+hold
-                im.putpixel((x,node[1]), color)
+                x = node[0] + hold
+                im.putpixel((x, node[1]), color)
         else:
             for node in cluster:
-                x = (node[0]*2+1)* scale/2+hold#with this method of drawing, a site would occupy two squares, so when drawing i simply divide the scale by 2,
-                y = (node[1]*2+1)* scale/2
-                xy = [((math.cos(th)*scale/2 +x) ,(math.sin(th)*scale/2 + y)) for th in [i * (2 * math.pi) / side for i in range(side)]]
-                draw.polygon(xy, fill =color)#major change
+                x = (
+                    node[0] * 2 + 1
+                ) * scale / 2 + hold  # with this method of drawing, a site would occupy two squares, so when drawing i simply divide the scale by 2,
+                y = (node[1] * 2 + 1) * scale / 2
+                xy = [
+                    ((math.cos(th) * scale / 2 + x), (math.sin(th) * scale / 2 + y))
+                    for th in [i * (2 * math.pi) / side for i in range(side)]
+                ]
+                draw.polygon(xy, fill=color)  # major change
         # Pick random color for next cluster
         colorRange = (0, 200)
         if change:
-         color = (random.randint(*colorRange),
-                 random.randint(*colorRange),
-                 random.randint(*colorRange))
-    x=convert(imsizex-0.5)
-    y=convert(imsizey/2)
-    r=convert(0.2)
-    liste=(x-r, y-r, x+r, y+r)
-    draw.ellipse(liste , fill=(0,0,0,0))
-    font = ImageFont.truetype(r'C:\Users\Carolina\AppData\Local\Microsoft\Windows\Fonts\AdobeKaitiStd-Regular.otf', 16)
-    draw.text((10, 10),'p= ' +str(p),(0,0,0),font=font)
-    if change: 
-     file=dire1+"\\" + str(p)+str(seed)+'.png'
-     im.save(file,'PNG',dpi=(400,400))
+            color = (
+                random.randint(*colorRange),
+                random.randint(*colorRange),
+                random.randint(*colorRange),
+            )
+    x = convert(imsizex - 0.5)
+    y = convert(imsizey / 2)
+    r = convert(0.2)
+    liste = (x - r, y - r, x + r, y + r)
+    draw.ellipse(liste, fill=(0, 0, 0, 0))
+    font = ImageFont.truetype(
+        r"C:\Users\Carolina\AppData\Local\Microsoft\Windows\Fonts\AdobeKaitiStd-Regular.otf",
+        16,
+    )
+    draw.text((10, 10), "p= " + str(p), (0, 0, 0), font=font)
+    if change:
+        file = dire1 + "\\" + str(p) + str(seed) + ".png"
+        im.save(file, "PNG", dpi=(400, 400))
     else:
-     file2=dire2+"\\" + str(p)+str(seed)+'.png'
-     im.save(file2,'PNG',dpi=(400,400))
-    #Display(file)
+        file2 = dire2 + "\\" + str(p) + str(seed) + ".png"
+        im.save(file2, "PNG", dpi=(400, 400))
+    # Display(file)
     return im
-def DrawCircularNetworkSites(borderup,borderdown,squares,L,H,p, imsizex,imsizey,nodelists, scale,seed, change=True, imfile=None):
-    pixelx=convert(imsizex)
-    pixely=convert(imsizey)
-    hold=convert(10)
-    rad=scale/2
-    dire1=r'C:\Users\acmor\Desktop\color'
-    dire2=r'C:\Users\acmor\Desktop\black'
+
+
+def DrawCircularNetworkSites(
+    borderup,
+    borderdown,
+    squares,
+    L,
+    H,
+    p,
+    imsizex,
+    imsizey,
+    nodelists,
+    scale,
+    seed,
+    change=True,
+    imfile=None,
+):
+    pixelx = convert(imsizex)
+    pixely = convert(imsizey)
+    hold = convert(10)
+    rad = scale / 2
+    dire1 = r"C:\Users\acmor\Desktop\color"
+    dire2 = r"C:\Users\acmor\Desktop\black"
     # Background white (in case some nodes missing)
     white = (255, 255, 255)
-    color=[0,0,0]
-    if change: 
-     file=dire1+"\\" + str(p)+str(seed)+'.svg'
+    color = [0, 0, 0]
+    if change:
+        file = dire1 + "\\" + str(p) + str(seed) + ".svg"
     else:
-     file=dire2+"\\" + str(p)+str(seed)+'.svg'
+        file = dire2 + "\\" + str(p) + str(seed) + ".svg"
     with cairo.SVGSurface(file, pixelx, pixely) as surface:
-     context = cairo.Context(surface)
-     # Draw clusters
-     for cluster in nodelists:
+        context = cairo.Context(surface)
+        # Draw clusters
+        for cluster in nodelists:
             for node in cluster:
-                x = node[0]* scale+hold
+                x = node[0] * scale + hold
                 y = node[1] * scale
-                context.arc(x+rad, y+rad, rad, 0, 2*math.pi)
+                context.arc(x + rad, y + rad, rad, 0, 2 * math.pi)
                 context.set_source_rgb(*color)
                 context.fill()
                 if squares[node]:
-                    context.rectangle(x+rad, y+rad, scale,scale)
+                    context.rectangle(x + rad, y + rad, scale, scale)
                     context.set_source_rgb(*color)
                     context.fill()
-                if node[1]==0:
-                 if borderup[node]:
-                    context.rectangle(x+scale/2, y ,scale, rad)
-                    context.set_source_rgb(*color)
-                    context.fill()
-                if node[1]==49:   
-                 if borderdown[node]:
-                    context.rectangle(x+scale/2, y+scale/2, scale, rad)
-                    context.set_source_rgb(*color)
-                    context.fill()
-                            
-               # Pick random color for next cluster
+                if node[1] == 0:
+                    if borderup[node]:
+                        context.rectangle(x + scale / 2, y, scale, rad)
+                        context.set_source_rgb(*color)
+                        context.fill()
+                if node[1] == 49:
+                    if borderdown[node]:
+                        context.rectangle(x + scale / 2, y + scale / 2, scale, rad)
+                        context.set_source_rgb(*color)
+                        context.fill()
+
+            # Pick random color for next cluster
             if change:
-                color = list(np.random.choice(range(100), size=3)/100)
-                
-     x=scale*305+hold
-     dist=0.26
-     r=convert(0.125)
-     for i in range (9):
-            color=[0,0,0]
+                color = list(np.random.choice(range(100), size=3) / 100)
+
+        x = scale * 305 + hold
+        dist = 0.26
+        r = convert(0.125)
+        for i in range(9):
+            color = [0, 0, 0]
             context.set_source_rgb(*color)
-            y=convert(dist*3/2+dist*2*i)
-            context.arc(x, y, r,0, 2*math.pi)
+            y = convert(dist * 3 / 2 + dist * 2 * i)
+            context.arc(x, y, r, 0, 2 * math.pi)
             context.fill()
-           
-def DrawSquareNetworkSites(L,H,p, imsizex,imsizey,nodelists, scale, seed, change=True):
-    pixelx=convert(imsizex)
-    pixely=convert(imsizey)
-<<<<<<< HEAD
-    hold=convert(10)
-    dire2=r'C:\Users\acmor\Desktop\black'
-    dire1=r'C:\Users\acmor\Desktop\color'
-=======
-    hold=convert(9)
-    dire2=r'C:/Users/acmor/Desktop\black'
-    dire1=r'C:/Users/acmor/Desktop\color'
->>>>>>> svg
+
+
+def DrawSquareNetworkSites(
+    L, H, p, imsizex, imsizey, nodelists, scale, seed, change=True
+):
+    pixelx = convert(imsizex)
+    pixely = convert(imsizey)
+    hold = convert(9)
+    dire2 = r"C:/Users/acmor/Desktop\black"
+    dire1 = r"C:/Users/acmor/Desktop\color"
     # Background white (in case some nodes missing)
-    color=[0,0,0]
-    if change: 
-     file=dire1+"\\" + str(p)+'.svg'
+    color = [0, 0, 0]
+    if change:
+        file = dire1 + "\\" + str(p) + ".svg"
     else:
-     file=dire2+"\\" + str(p)+'.svg'
+        file = dire2 + "\\" + str(p) + ".svg"
     with cairo.SVGSurface(file, pixelx, pixely) as surface:
-     context = cairo.Context(surface)
-     for cluster in nodelists:
-         context.set_source_rgb(*color)
-         for node in cluster:
-            x = node[0]* scale+hold
-            y = node[1] * scale
-            context.rectangle(x, y,  scale, scale)
+        context = cairo.Context(surface)
+        for cluster in nodelists:
+            context.set_source_rgb(*color)
+            for node in cluster:
+                x = node[0] * scale + hold
+                y = node[1] * scale
+                context.rectangle(x, y, scale, scale)
+                context.fill()
+            # Pick random color for next cluster
+            if change:
+                color = list(np.random.random_sample((3,)))
+                print(color)
+        x = scale * 305 + hold
+        dist = 0.26
+        r = convert(0.125)
+        color = [0, 0, 0]
+        context.set_source_rgb(*color)
+        for i in range(9):
+            y = convert(dist * 3 / 2 + dist * 2 * i)
+            context.arc(x, y, r, 0, 2 * math.pi)
             context.fill()
-         # Pick random color for next cluster
-         if change:
-<<<<<<< HEAD
-          color = (random.randint(*colorRange),
-                  random.randint(*colorRange),
-                  random.randint(*colorRange))
-     context.rectangle(0,0,hold+L*scale,H*scale)
-     context.set_line_width(3)
-=======
-            color = list(np.random.random_sample((3,)))
-            print(color)
-     x=scale*305+hold
-     dist=0.26
-     r=convert(0.125)
-     color=[0,0,0]
-     context.set_source_rgb(*color)
-     for i in range (9):
-      y=convert(dist*3/2+dist*2*i)
-      context.arc(x, y, r,0, 2*math.pi)
-      context.fill()
-     context.rectangle(0,0,hold+convert(1)+L*scale,H*scale)
-     context.set_line_width(1)
->>>>>>> svg
-     context.stroke()
-     context.set_font_size(80)
-     context.move_to(hold/2,convert(5))
-     context.show_text("p="+str(p))
+        context.rectangle(0, 0, hold + convert(1) + L * scale, H * scale)
+        context.set_line_width(1)
+        context.stroke()
+        context.set_font_size(80)
+        context.move_to(hold / 2, convert(5))
+        context.show_text("p=" + str(p))
+
 
 # Copyright (C) Cornell University
 # All rights reserved.
 # Apache License, Version 2.0
-#this was partly modified to suit my interests
+# this was partly modified to suit my interests

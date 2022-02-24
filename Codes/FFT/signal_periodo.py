@@ -124,14 +124,11 @@ if __name__ == "__main__":
    Y_pred = linear_regressor.predict(X)  # make predictions
    ols = sm.OLS(Y, X)
    ols_result = ols.fit()
-   residuals = Y-Y_pred
-   residuals= residuals**2
-   standard_error = (sum(residuals)/(10-2))**0.5
-   print('hi:'+ str(standard_error))
    BSE=ols_result.bse
    Pendiente=linear_regressor.coef_
    Intercepto=linear_regressor.intercept_
    Rcuadrado=linear_regressor.score(X,Y)
+   
    fig, (ax1)=plt.subplots(1, 1,figsize=(16, 10))
    ax1.plot(X,Y,'s',markersize=8,color='black')
    ax1.plot(X,Y_pred,markersize=10,color='black')
